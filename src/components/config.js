@@ -1,6 +1,6 @@
 // URL base de la API
-// Usando proxy para evitar problemas de CORS en desarrollo
-export const API_URL = "/api";
+// Usando URLs directas del servidor
+export const API_URL = "https://wspflows.cober.online/api";
 
 // Endpoints específicos
 export const ENDPOINTS = {

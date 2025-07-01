@@ -67,7 +67,7 @@ const Login = () => {
       // POST a /sessions/start
       try {
         const sessionRes = await axios.post(
-          "/api/sessions/start",
+          `${ENDPOINTS.AUTH}/sessions/start`,
           {
             login_time: loginTime,
             ip: "", // El backend puede obtener la IP real

@@ -7,19 +7,20 @@ export default defineConfig({
   server: {
     host: 'localhost',
     port: 5173,
-    proxy: {
-      '/api': {
-        target: 'https://wspflows.cober.online',
-        changeOrigin: true,
-        secure: true,
-        configure: (proxy) => {
-          proxy.on('proxyReq', (proxyReq) => {
-            // Agregar headers necesarios
-            proxyReq.setHeader('Origin', 'https://wspflows.cober.online');
-            proxyReq.setHeader('Referer', 'https://wspflows.cober.online');
-          });
-        }
-      }
-    }
+    // Proxy deshabilitado - usando URLs directas del backend
+    // proxy: {
+    //   '/api': {
+    //     target: 'https://wspflows.cober.online',
+    //     changeOrigin: true,
+    //     secure: true,
+    //     configure: (proxy) => {
+    //       proxy.on('proxyReq', (proxyReq) => {
+    //         // Agregar headers necesarios
+    //         proxyReq.setHeader('Origin', 'https://wspflows.cober.online');
+    //         proxyReq.setHeader('Referer', 'https://wspflows.cober.online');
+    //       });
+    //     }
+    //   }
+    // }
   }
 })
