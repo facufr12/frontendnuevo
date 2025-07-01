@@ -1,0 +1,666 @@
+/* Sobrescribir colores primarios de Bootstrap con #754ffe */
+
+/* Variables CSS personalizadas */
+:root {
+  --bs-primary: #754ffe;
+  --bs-primary-rgb: 117, 79, 254;
+  --bs-primary-bg-subtle: #f2e9f5;
+  --bs-primary-border-subtle: #d7b8e0;
+  --bs-primary-text-emphasis: #4a2152;
+  
+  /* Variables para modo claro */
+  --bg-light: #f8f9fa;
+  --text-light: #212529;
+  --card-bg-light: #ffffff;
+  --border-light: #dee2e6;
+}
+
+/* Variables para modo oscuro */
+[data-bs-theme="dark"] {
+  --bg-light: #0a0a0a;
+  --text-light: #ffffff;
+  --card-bg-light: #1a1a1a;
+  --border-light: #333333;
+}
+
+/* Modo oscuro personalizado - Fondo más oscuro */
+.dark-mode {
+  background-color: #0a0a0a !important;
+  color: #e0e0e0 !important;
+  min-height: 100vh;
+}
+
+/* Cards en modo oscuro - Más contraste */
+.dark-mode .card {
+  background-color: #1a1a1a !important;
+  border-color: #333333 !important;
+  color: #e0e0e0 !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Form controls en modo oscuro - Mejor contraste */
+.dark-mode .form-control {
+  background-color: #262626 !important;
+  border-color: #404040 !important;
+  color: #e0e0e0 !important;
+}
+
+.dark-mode .form-control:focus {
+  background-color: #262626 !important;
+  border-color: #754ffe !important;
+  color: #e0e0e0 !important;
+  box-shadow: 0 0 0 0.2rem rgba(117, 79, 254, 0.25) !important;
+}
+
+.dark-mode .form-control::placeholder {
+  color: #999999 !important;
+}
+
+.dark-mode .form-label {
+  color: #e0e0e0 !important;
+  font-weight: 500;
+}
+
+.dark-mode .text-muted {
+  color: #b0b0b0 !important;
+}
+
+.dark-mode .bg-light {
+  background-color: #0a0a0a !important;
+}
+
+/* Botones primarios - Mantener #754ffe prominente */
+.btn-primary {
+  background-color: #754ffe !important;
+  border-color: #754ffe !important;
+  color: #ffffff !important;
+  font-weight: 500;
+}
+
+.btn-primary:hover {
+  background-color: #6c46f7 !important;
+  border-color: #6c46f7 !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(117, 79, 254, 0.3) !important;
+}
+
+.btn-primary:focus,
+.btn-primary.focus {
+  box-shadow: 0 0 0 0.2rem rgba(117, 79, 254, 0.5) !important;
+}
+
+.btn-primary:active,
+.btn-primary.active {
+  background-color: #5d3def !important;
+  border-color: #5d3def !important;
+}
+
+.btn-primary:disabled,
+.btn-primary.disabled {
+  background-color: #754ffe !important;
+  border-color: #754ffe !important;
+  opacity: 0.65;
+}
+
+/* Backgrounds primarios */
+.bg-primary {
+  background-color: #754ffe !important;
+}
+
+.text-primary {
+  color: #754ffe !important;
+}
+
+/* Bordes primarios */
+.border-primary {
+  border-color: #754ffe !important;
+}
+
+/* Links primarios */
+.link-primary {
+  color: #754ffe !important;
+}
+
+.link-primary:hover,
+.link-primary:focus {
+  color: #6c46f7 !important;
+}
+
+/* Alertas primarias */
+.alert-primary {
+  color: #4a2152;
+  background-color: #f2e9f5;
+  border-color: #d7b8e0;
+}
+
+.dark-mode .alert-primary {
+  color: #b19cd9;
+  background-color: rgba(117, 79, 254, 0.15);
+  border-color: #754ffe;
+}
+
+/* Badges primarios */
+.badge.bg-primary {
+  background-color: #754ffe !important;
+}
+
+/* Badge personalizado con color primario */
+.badge-primary-custom {
+  background-color: #754ffe !important;
+  color: white !important;
+  border: none !important;
+}
+
+/* Badge personalizado en modo oscuro */
+.dark-mode .badge-primary-custom {
+  background-color: #754ffe !important;
+  color: white !important;
+}
+
+/* Reglas más específicas para badges personalizados */
+.badge.badge-primary-custom,
+span.badge.badge-primary-custom,
+.badge-primary-custom.badge {
+  background-color: #754ffe !important;
+  color: white !important;
+  border-color: #754ffe !important;
+}
+
+/* En modo oscuro también */
+.dark-mode .badge.badge-primary-custom,
+.dark-mode span.badge.badge-primary-custom,
+.dark-mode .badge-primary-custom.badge {
+  background-color: #754ffe !important;
+  color: white !important;
+  border-color: #754ffe !important;
+}
+
+/* Badge de estado personalizado - máxima especificidad */
+.badge-estado-custom {
+  background-color: #754ffe !important;
+  color: white !important;
+  border: none !important;
+}
+
+span.badge.badge-estado-custom,
+.badge.badge-estado-custom,
+.badge-estado-custom.badge {
+  background-color: #754ffe !important;
+  color: white !important;
+  border: none !important;
+}
+
+/* En modo oscuro también */
+.dark-mode .badge-estado-custom,
+.dark-mode span.badge.badge-estado-custom,
+.dark-mode .badge.badge-estado-custom,
+.dark-mode .badge-estado-custom.badge {
+  background-color: #754ffe !important;
+  color: white !important;
+  border: none !important;
+}
+
+/* Progress bars primarios */
+.progress-bar {
+  background-color: #754ffe !important;
+}
+
+/* Form controls focus */
+.form-control:focus,
+.form-select:focus {
+  border-color: #754ffe !important;
+  box-shadow: 0 0 0 0.2rem rgba(117, 79, 254, 0.25) !important;
+}
+
+/* Checkboxes y radios */
+.form-check-input:checked {
+  background-color: #754ffe !important;
+  border-color: #754ffe !important;
+}
+
+.form-check-input:focus {
+  border-color: #754ffe !important;
+  box-shadow: 0 0 0 0.2rem rgba(117, 79, 254, 0.25) !important;
+}
+
+/* Navs y tabs */
+.nav-link.active {
+  color: #754ffe !important;
+}
+
+.nav-pills .nav-link.active {
+  background-color: #754ffe !important;
+}
+
+/* Dropdowns en modo oscuro - Mejorar contraste */
+.dropdown-item.active,
+.dropdown-item:active {
+  background-color: #754ffe !important;
+}
+
+.dark-mode .dropdown-menu {
+  background-color: #1a1a1a !important;
+  border-color: #333333 !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5) !important;
+}
+
+.dark-mode .dropdown-item {
+  color: #e0e0e0 !important;
+}
+
+.dark-mode .dropdown-item:hover {
+  background-color: #262626 !important;
+}
+
+/* Paginación */
+.page-link {
+  color: #754ffe !important;
+}
+
+.page-item.active .page-link {
+  background-color: #754ffe !important;
+  border-color: #754ffe !important;
+}
+
+.dark-mode .page-link {
+  background-color: #1a1a1a !important;
+  border-color: #333333 !important;
+  color: #754ffe !important;
+}
+
+.dark-mode .page-link:hover {
+  background-color: #262626 !important;
+}
+
+/* Spinners */
+.spinner-border {
+  color: #754ffe !important;
+}
+
+/* Cards con header primario */
+.card-header.bg-primary {
+  background-color: #754ffe !important;
+  border-color: #754ffe !important;
+}
+
+/* Transiciones suaves para el cambio de tema */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease !important;
+}
+
+/* Links en modo oscuro - Mejor contraste */
+.dark-mode a {
+  color: #a78bfa !important;
+}
+
+.dark-mode a:hover {
+  color: #c4b5fd !important;
+}
+
+.dark-mode .text-decoration-none {
+  color: #754ffe !important;
+}
+
+.dark-mode .text-decoration-none:hover {
+  color: #8b5cf6 !important;
+}
+
+/* Tablas en modo oscuro */
+.dark-mode .table {
+  color: #e0e0e0 !important;
+  background-color: #1a1a1a !important;
+}
+
+.dark-mode .table-striped > tbody > tr:nth-of-type(odd) > td {
+  background-color: rgba(255, 255, 255, 0.03) !important;
+}
+
+.dark-mode .table-hover tbody tr:hover {
+  background-color: rgba(117, 79, 254, 0.1) !important;
+}
+
+/* Botones outline en modo oscuro */
+.dark-mode .btn-outline-secondary {
+  color: #e0e0e0 !important;
+  border-color: #404040 !important;
+}
+
+.dark-mode .btn-outline-secondary:hover {
+  background-color: #262626 !important;
+  border-color: #754ffe !important;
+  color: #754ffe !important;
+}
+
+/* Botones de outline en modo oscuro - Mejorados */
+.dark-mode .btn-outline-primary {
+  color: #754ffe !important;
+  border-color: #754ffe !important;
+}
+
+.dark-mode .btn-outline-primary:hover {
+  background-color: #754ffe !important;
+  border-color: #754ffe !important;
+  color: #ffffff !important;
+}
+
+.dark-mode .btn-light {
+  background-color: #262626 !important;
+  border-color: #404040 !important;
+  color: #e0e0e0 !important;
+}
+
+.dark-mode .btn-light:hover {
+  background-color: #333333 !important;
+  border-color: #754ffe !important;
+  color: #754ffe !important;
+}
+
+/* Badges adicionales en modo oscuro */
+.dark-mode .badge {
+  color: #ffffff !important;
+}
+
+.dark-mode .badge.bg-info {
+  background-color: #17a2b8 !important;
+}
+
+.dark-mode .badge.bg-success {
+  background-color: #28a745 !important;
+}
+
+.dark-mode .badge.bg-warning {
+  background-color: #754ffe !important;
+  color: #fff8f8 !important;
+}
+
+.dark-mode .badge.bg-danger {
+  background-color: #dc3545 !important;
+}
+
+.dark-mode .badge.bg-secondary {
+  background-color: #6c757d !important;
+}
+
+/* Spinners en modo oscuro */
+.dark-mode .spinner-border {
+  color: #754ffe !important;
+}
+
+/* Progress bars en modo oscuro */
+.dark-mode .progress {
+  background-color: #262626 !important;
+}
+
+.dark-mode .progress-bar {
+  background-color: #754ffe !important;
+}
+
+/* Text areas y selects específicos */
+.dark-mode .form-select {
+  background-color: #262626 !important;
+  border-color: #404040 !important;
+  color: #e0e0e0 !important;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23e0e0e0' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m1 6 7 7 7-7'/%3e%3c/svg%3e") !important;
+}
+
+.dark-mode .form-select:focus {
+  background-color: #262626 !important;
+  border-color: #754ffe !important;
+  color: #e0e0e0 !important;
+  box-shadow: 0 0 0 0.2rem rgba(117, 79, 254, 0.25) !important;
+}
+
+/* Links específicos de navegación */
+.dark-mode .btn-outline-secondary {
+  color: #e0e0e0 !important;
+  border-color: #404040 !important;
+}
+
+.dark-mode .btn-outline-secondary:hover {
+  background-color: #262626 !important;
+  border-color: #754ffe !important;
+  color: #754ffe !important;
+}
+
+/* Estilos para ThemeToggle */
+.dark-mode .btn.btn-outline-secondary[title*="modo"] {
+  background-color: transparent !important;
+  border: 1px solid #404040 !important;
+  color: #e0e0e0 !important;
+  border-radius: 0.375rem;
+  padding: 0.375rem 0.75rem;
+}
+
+.dark-mode .btn.btn-outline-secondary[title*="modo"]:hover {
+  background-color: #262626 !important;
+  border-color: #754ffe !important;
+  color: #754ffe !important;
+}
+
+/* Asegurar que el botón de cerrar modal funcione en dark mode */
+.dark-mode .btn-close {
+  filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+/* Tooltips en modo oscuro */
+.dark-mode .tooltip-inner {
+  background-color: #1a1a1a !important;
+  border: 1px solid #333333 !important;
+}
+
+.dark-mode .tooltip .tooltip-arrow {
+  border-color: #333333 !important;
+}
+
+/* Separadores en modo oscuro */
+.dark-mode hr {
+  border-color: #333333 !important;
+  opacity: 0.5;
+}
+
+/* Text areas en modo oscuro */
+.dark-mode .form-control:not(input) {
+  background-color: #262626 !important;
+  border-color: #404040 !important;
+  color: #e0e0e0 !important;
+}
+
+/* Contenedores principales de vendedor */
+.vendor-main-container {
+  background-color: #f8f9fa;
+  min-height: 100vh;
+}
+
+.dark-mode .vendor-main-container {
+  background-color: #0a0a0a !important;
+}
+
+/* Sidebar vendedor */
+.vendor-sidebar {
+  background-color: #ffffff;
+}
+
+.dark-mode .vendor-sidebar {
+  background-color: #1a1a1a !important;
+  border-color: #333333 !important;
+}
+
+/* Topbar vendedor */
+.vendor-topbar {
+  background-color: #ffffff;
+  border-bottom-color: #dee2e6;
+}
+
+.dark-mode .vendor-topbar {
+  background-color: #1a1a1a !important;
+  border-bottom-color: #333333 !important;
+}
+
+/* Content areas vendedor */
+.vendor-content {
+  background-color: #ffffff;
+  border-radius: 0.375rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.dark-mode .vendor-content {
+  background-color: #1a1a1a !important;
+  border-color: #333333 !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Offcanvas en modo oscuro */
+.dark-mode .offcanvas {
+  background-color: #1a1a1a !important;
+  border-color: #333333 !important;
+}
+
+.dark-mode .offcanvas-header {
+  border-bottom-color: #333333 !important;
+}
+
+/* ListGroup en modo oscuro */
+.dark-mode .list-group-item {
+  background-color: #1a1a1a !important;
+  border-color: #333333 !important;
+  color: #e0e0e0 !important;
+}
+
+.dark-mode .list-group-item:hover {
+  background-color: #262626 !important;
+}
+
+.dark-mode .list-group-item.active {
+  background-color: #754ffe !important;
+  border-color: #754ffe !important;
+}
+
+/* Logo adaptativo al tema */
+.auth-logo {
+  transition: filter 0.3s ease;
+}
+
+/* En modo claro, el logo aparece oscuro en header primario */
+.card-header.bg-primary .auth-logo {
+  filter: brightness(0) invert(1); /* Blanco para header primario */
+}
+
+/* En modo oscuro, mantener el logo blanco en header primario */
+.dark-mode .card-header.bg-primary .auth-logo {
+  filter: brightness(0) invert(1); /* Mantener blanco */
+}
+
+/* Si el logo estuviera en un contexto de fondo claro en dark mode */
+.dark-mode .bg-light .auth-logo,
+.dark-mode .vendor-content .auth-logo {
+  filter: brightness(0) invert(1); /* Blanco en dark mode */
+}
+
+/* Si el logo estuviera en un contexto de fondo oscuro en light mode */
+.bg-dark .auth-logo,
+.vendor-content .auth-logo {
+  filter: brightness(0); /* Negro en light mode */
+}
+
+/* Logo en sidebar de vendedor - adaptativo al tema */
+.vendor-sidebar .auth-logo {
+  filter: none; /* Sin filtro por defecto en light mode */
+  margin-bottom: 1rem; /* Más espacio debajo del logo */
+}
+
+.dark-mode .vendor-sidebar .auth-logo {
+  filter: brightness(0) invert(1); /* Blanco en dark mode */
+  margin-bottom: 1rem; /* Más espacio debajo del logo */
+}
+
+/* Placeholder del logo en sidebar */
+.vendor-sidebar .logo-placeholder {
+  background: rgba(117, 79, 254, 0.1) !important;
+  color: #754ffe !important;
+  border: 1px solid rgba(117, 79, 254, 0.2);
+}
+
+.dark-mode .vendor-sidebar .logo-placeholder {
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Sobrescribir bg-warning para badges de estado con color primario */
+.badge.bg-warning {
+  background-color: #754ffe !important;
+  color: white !important;
+}
+
+/* También en modo oscuro */
+.dark-mode .badge.bg-warning {
+  background-color: #754ffe !important;
+  color: white !important;
+}
+
+/* Sobrescribir cualquier badge que use clases de Bootstrap para usar color primario */
+.badge.bg-primary,
+.badge.bg-warning,
+.badge.bg-info,
+.badge.bg-danger,
+.badge.bg-success {
+  background-color: #754ffe !important;
+  color: white !important;
+}
+
+/* En modo oscuro también */
+.dark-mode .badge.bg-primary,
+.dark-mode .badge.bg-warning,
+.dark-mode .badge.bg-info,
+.dark-mode .badge.bg-danger,
+.dark-mode .badge.bg-success {
+  background-color: #754ffe !important;
+  color: white !important;
+}
+
+/* Forzar color primario en TODOS los badges de estado - máxima especificidad */
+.badge[style*="background-color"],
+.badge.bg-warning[style*="background-color"],
+.badge.bg-primary[style*="background-color"],
+.badge.bg-info[style*="background-color"],
+.badge.bg-success[style*="background-color"],
+.badge.bg-danger[style*="background-color"] {
+  background-color: #754ffe !important;
+  color: white !important;
+}
+
+/* Regla específica para el badge de estado en ProspectoDetalle */
+p strong + .badge-estado-custom,
+p .badge-estado-custom {
+  background-color: #754ffe !important;
+  color: white !important;
+  border: none !important;
+}
+
+/* Sobrescribir TODAS las variantes de Bootstrap badges */
+.badge,
+.badge.bg-primary,
+.badge.bg-secondary,
+.badge.bg-success,
+.badge.bg-danger,
+.badge.bg-warning,
+.badge.bg-info,
+.badge.bg-light,
+.badge.bg-dark {
+  background-color: #754ffe !important;
+  color: white !important;
+}
+
+/* En modo oscuro también */
+.dark-mode .badge,
+.dark-mode .badge.bg-primary,
+.dark-mode .badge.bg-secondary,
+.dark-mode .badge.bg-success,
+.dark-mode .badge.bg-danger,
+.dark-mode .badge.bg-warning,
+.dark-mode .badge.bg-info,
+.dark-mode .badge.bg-light,
+.dark-mode .badge.bg-dark {
+  background-color: #754ffe !important;
+  color: white !important;
+}

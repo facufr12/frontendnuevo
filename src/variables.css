@@ -1,0 +1,13 @@
+/* Variables CSS globales para el proyecto */
+:root {
+  /* Color primario personalizado */
+  --color-primary: #78358b;
+  --color-primary-hover: #653074;
+  --color-primary-active: #5a2a68;
+  --color-primary-light: #f2e9f5;
+  --color-primary-border: #d7b8e0;
+  
+  /* Sobrescribir variables de Bootstrap */
+  --bs-primary: var(--color-primary);
+  --bs-primary-rgb: 120, 53, 139;
+}
