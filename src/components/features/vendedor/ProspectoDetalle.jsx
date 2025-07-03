@@ -38,7 +38,7 @@ const ProspectoDetalle = () => {
   const fetchCotizaciones = useCallback(async () => {
     try {
       const token = localStorage.getItem("token");
-      const { data } = await axios.get(`https://wspflows.cober.online/api/lead/${id}/cotizaciones?detalles=1`, {
+      const { data } = await axios.get(`/api/lead/${id}/cotizaciones?detalles=1`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -88,7 +88,7 @@ const ProspectoDetalle = () => {
     const fetchProspecto = async () => {
       try {
         const token = localStorage.getItem("token");
-        const { data } = await axios.get(`https://wspflows.cober.online/api/prospectos/${id}`, {
+        const { data } = await axios.get(`/api/prospectos/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setProspecto(data);
@@ -102,7 +102,7 @@ const ProspectoDetalle = () => {
     const fetchPromociones = async () => {
       try {
         const token = localStorage.getItem("token");
-        const { data } = await axios.get("https://wspflows.cober.online/api/vendedor/promociones", {
+        const { data } = await axios.get("/api/vendedor/promociones", {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -203,7 +203,7 @@ const ProspectoDetalle = () => {
     <div className="d-flex vendor-main-container" style={{ minHeight: "100vh" }}>
       {/* Sidebar fijo para escritorio */}
       <div
-        className="d-none d-md-block vendor-sidebar border-end"
+        className="d-none d-lg-block vendor-sidebar border-end"
         style={{ width: drawerWidth, minHeight: "100vh", position: "fixed", zIndex: 1030 }}
       >
         {drawerContent}
@@ -212,78 +212,103 @@ const ProspectoDetalle = () => {
       <Offcanvas
         show={openDrawer}
         onHide={() => setOpenDrawer(false)}
-        backdrop={false}
+        backdrop={true}
         scroll={true}
         style={{ width: drawerWidth }}
-        className="d-md-none"
+        className="d-lg-none"
       >
         {drawerContent}
       </Offcanvas>
       {/* Contenido principal */}
-      <div style={{ flex: 1, marginLeft: window.innerWidth >= 768 ? drawerWidth : 0 }}>
-        {/* Topbar */}
-        <div className="d-flex align-items-center justify-content-between p-3 border-bottom">
-          <div className="d-flex align-items-center">
-            <Button variant="light" className="d-md-none me-2" onClick={() => setOpenDrawer(true)}>
-              <FaBars />
-            </Button>
-            <Link to="/prospectos" className="btn btn-outline-secondary me-2">
-              <FaArrowLeft /> Volver
-            </Link>
-            <h2>Detalle del Prospecto</h2>
-          </div>
-          <div className="d-flex align-items-center">
-            <Button variant="success" className="me-2" onClick={() => setShowPromocionesModal(true)}>
-              <FaMoneyBillWave className="me-1" /> Aplicar Promoción
-            </Button>
-            <ThemeToggle />
+      <div style={{ flex: 1, marginLeft: window.innerWidth >= 992 ? drawerWidth : 0 }}>
+        {/* Topbar móvil-responsivo */}
+        <div className="border-bottom bg-white sticky-top">
+          <div className="d-flex align-items-center justify-content-between p-2 p-md-3">
+            <div className="d-flex align-items-center flex-wrap">
+              <Button variant="light" className="d-lg-none me-2 btn-sm" onClick={() => setOpenDrawer(true)}>
+                <FaBars />
+              </Button>
+              <Link to="/prospectos" className="btn btn-outline-secondary me-2 btn-sm">
+                <FaArrowLeft className="d-md-none" />
+                <span className="d-none d-md-inline"> Volver</span>
+              </Link>
+              <h2 className="h4 h-md-2 mb-0">Detalle del Prospecto</h2>
+            </div>
+            <div className="d-flex align-items-center">
+              <Button 
+                variant="success" 
+                className="me-2 btn-sm" 
+                onClick={() => setShowPromocionesModal(true)}
+              >
+                <FaMoneyBillWave className="d-md-none" />
+                <span className="d-none d-md-inline ms-1">Aplicar Promoción</span>
+              </Button>
+              <ThemeToggle />
+            </div>
           </div>
         </div>
 
         {/* Contenido del detalle */}
-        <Container fluid className="p-4">
-          <Row className="mb-4">
-            <Col md={6}>
-              <Card className="h-100">
-                <Card.Header>
-                  <h3>Información del Prospecto</h3>
+        <Container fluid className="p-2 p-md-4">
+          <Row className="mb-3 mb-md-4 g-3">
+            <Col lg={6} className="mb-3 mb-lg-0">
+              <Card className="h-100 shadow-sm">
+                <Card.Header className="bg-primary text-white">
+                  <h3 className="h5 mb-0">Información del Prospecto</h3>
                 </Card.Header>
-                <Card.Body>
-                  <p><strong>Nombre:</strong> {capitalizeName(prospecto.nombre)} {capitalizeName(prospecto.apellido)}</p>
-                  <p><strong>Edad:</strong> {prospecto.edad}</p>
-                  <p><strong>Contacto:</strong> {prospecto.numero_contacto}</p>
-                  <p><strong>Email:</strong> {prospecto.correo}</p>
-                  <p><strong>Localidad:</strong> {prospecto.localidad}</p>
-                  <p><strong>Estado:</strong> <Badge bg="primary">{prospecto.estado}</Badge></p>
-                  <p><strong>Comentario:</strong> {prospecto.comentario || "Sin comentario"}</p>
+                <Card.Body className="p-3">
+                  <div className="row g-2">
+                    <div className="col-12 col-sm-6">
+                      <p className="mb-2"><strong>Nombre:</strong><br className="d-sm-none" /> {capitalizeName(prospecto.nombre)} {capitalizeName(prospecto.apellido)}</p>
+                    </div>
+                    <div className="col-12 col-sm-6">
+                      <p className="mb-2"><strong>Edad:</strong><br className="d-sm-none" /> {prospecto.edad}</p>
+                    </div>
+                    <div className="col-12 col-sm-6">
+                      <p className="mb-2"><strong>Contacto:</strong><br className="d-sm-none" /> {prospecto.numero_contacto}</p>
+                    </div>
+                    <div className="col-12 col-sm-6">
+                      <p className="mb-2"><strong>Email:</strong><br className="d-sm-none" /> <span className="text-break">{prospecto.correo}</span></p>
+                    </div>
+                    <div className="col-12 col-sm-6">
+                      <p className="mb-2"><strong>Localidad:</strong><br className="d-sm-none" /> {prospecto.localidad}</p>
+                    </div>
+                    <div className="col-12 col-sm-6">
+                      <p className="mb-2"><strong>Estado:</strong><br className="d-sm-none" /> <Badge bg="primary">{prospecto.estado}</Badge></p>
+                    </div>
+                    <div className="col-12">
+                      <p className="mb-0"><strong>Comentario:</strong><br /> {prospecto.comentario || "Sin comentario"}</p>
+                    </div>
+                  </div>
                 </Card.Body>
               </Card>
             </Col>
-            <Col md={6}>
-              <Card className="h-100">
-                <Card.Header>
-                  <h5>Familiares</h5>
+            <Col lg={6}>
+              <Card className="h-100 shadow-sm">
+                <Card.Header className="bg-info text-white">
+                  <h5 className="mb-0">Familiares</h5>
                 </Card.Header>
-                <Card.Body>
+                <Card.Body className="p-3">
                   {prospecto.familiares && prospecto.familiares.length > 0 ? (
                     <div>
                       {prospecto.familiares.map((familiar, idx) => (
-                        <Card key={idx} className="mb-2">
-                          <Card.Body>
-                            <div><FaUserFriends className="me-2" /> <strong>{familiar.vinculo}:</strong> {familiar.nombre} ({familiar.edad} años)</div>
-                            <div className="mt-2">
+                        <Card key={idx} className="mb-3 border-start border-info border-3">
+                          <Card.Body className="p-3">
+                            <div className="mb-2">
+                              <FaUserFriends className="me-2 text-info" />
+                              <strong>{familiar.vinculo}:</strong> {familiar.nombre} ({familiar.edad} años)
+                            </div>
+                            <div className="d-flex flex-wrap gap-2">
                               {familiar.tipo_afiliacion_id && (
-                                <span className="me-2">
-                                  <Badge bg="info">
-                                    Afiliación: {TIPO_AFILIACION[familiar.tipo_afiliacion_id] || familiar.tipo_afiliacion_id}
-                                  </Badge>
-                                </span>
+                                <Badge bg="info" className="text-wrap">
+                                  Afiliación: {TIPO_AFILIACION[familiar.tipo_afiliacion_id] || familiar.tipo_afiliacion_id}
+                                </Badge>
                               )}
                               {familiar.sueldo_bruto && (
-                                <span className="me-2"><Badge bg="success">Sueldo: {formatCurrency(familiar.sueldo_bruto)}</Badge></span>
+                                <Badge bg="success" className="text-wrap">Sueldo: {formatCurrency(familiar.sueldo_bruto)}</Badge>
                               )}
                               {familiar.categoria_monotributo && (
-                                <span className="me-2"><Badge bg="secondary">Monotributo: {familiar.categoria_monotributo}</Badge></span>
+                                <Badge bg="secondary">Monotributo: {familiar.categoria_monotributo}</Badge>
                               )}
                             </div>
                           </Card.Body>
@@ -291,102 +316,144 @@ const ProspectoDetalle = () => {
                       ))}
                     </div>
                   ) : (
-                    <div className="text-muted">Sin familiares</div>
+                    <div className="text-muted text-center py-3">Sin familiares</div>
                   )}
                 </Card.Body>
               </Card>
             </Col>
           </Row>
 
-          <Card className="mb-4 shadow-sm">
+          <Card className="mb-3 mb-md-4 shadow-sm">
             <Card.Header className="bg-primary text-white">
               <h5 className="mb-0"><FaMoneyBillWave className="me-2" /> Cotizaciones</h5>
             </Card.Header>
-            <Card.Body>
+            <Card.Body className="p-2 p-md-3">
               {cotizaciones.length === 0 ? (
-                <div className="text-muted text-center">Sin cotizaciones</div>
+                <div className="text-muted text-center py-4">Sin cotizaciones</div>
               ) : (
-                <Row xs={1} md={2} lg={3} className="g-4">
+                <Row xs={1} lg={2} xl={3} className="g-3">
                   {cotizaciones.map((cotizacion, index) => (
                     <Col key={index}>
-                      <Card className="h-100 shadow-sm">
+                      <Card className="h-100 shadow-sm border-primary">
                         <Card.Header className="text-center bg-primary text-white">
-                          <h5>{cotizacion.plan_nombre || "Sin nombre de plan"}</h5>
-                          <p className="mb-0">
-                            <small>
-                              {cotizacion.detalles && cotizacion.detalles.length > 0
-                                ? [...new Set(cotizacion.detalles.map((detalle) => 
-                                    detalle.tipo_afiliacion || TIPO_AFILIACION[detalle.tipo_afiliacion_id] || "Sin tipo"
-                                  ))].join(", ")
-                                : "Sin tipo de afiliación"}
-                            </small>
+                          <h5 className="mb-1">{cotizacion.plan_nombre || "Sin nombre de plan"}</h5>
+                          <p className="mb-0 small">
+                            {cotizacion.detalles && cotizacion.detalles.length > 0
+                              ? [...new Set(cotizacion.detalles.map((detalle) => 
+                                  detalle.tipo_afiliacion || TIPO_AFILIACION[detalle.tipo_afiliacion_id] || "Sin tipo"
+                                ))].join(", ")
+                              : "Sin tipo de afiliación"}
                           </p>
                         </Card.Header>
-                        <Card.Body>
-                          <p><strong>Grupo Familiar:</strong> {
-                            cotizacion.detalles && cotizacion.detalles.length > 0 
+                        <Card.Body className="p-2 p-md-3">
+                          <p className="mb-3"><strong>Grupo Familiar:</strong><br />
+                            {cotizacion.detalles && cotizacion.detalles.length > 0 
                               ? cotizacion.detalles.map(d => d.vinculo).join(", ")
-                              : "Sin detalles"
-                          }</p>
+                              : "Sin detalles"}
+                          </p>
                           
+                          {/* Tabla responsive para móvil */}
                           {cotizacion.detalles && cotizacion.detalles.length > 0 && (
-                            <div className="table-responsive">
-                              <Table striped bordered hover size="sm" style={{ minWidth: "800px" }}>
-                                <thead className="table-primary">
-                                  <tr>
-                                    <th style={{ minWidth: "100px" }}>Persona</th>
-                                    <th style={{ minWidth: "80px" }}>Vínculo</th>
-                                    <th style={{ minWidth: "60px" }}>Edad</th>
-                                    <th style={{ minWidth: "100px" }}>Tipo Afiliación</th>
-                                    <th style={{ minWidth: "90px" }}>Precio Base</th>
-                                    <th style={{ minWidth: "90px" }}>Desc. Aporte</th>
-                                    <th style={{ minWidth: "100px" }}>Promoción</th>
-                                    <th style={{ minWidth: "90px" }}>Desc. Promo</th>
-                                    <th style={{ minWidth: "100px" }}>Precio Final</th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  {cotizacion.detalles.map((detalle, idx) => (
-                                    <tr key={idx}>
-                                      <td>{capitalizeName(detalle.persona)}</td>
-                                      <td>{detalle.vinculo}</td>
-                                      <td>{detalle.edad}</td>
-                                      <td>{detalle.tipo_afiliacion || TIPO_AFILIACION[detalle.tipo_afiliacion_id] || "Sin tipo"}</td>
-                                      <td>{formatCurrency(detalle.precio_base)}</td>
-                                      <td>{formatCurrency(detalle.descuento_aporte)}</td>
-                                      <td>{detalle.promocion_aplicada || "Sin promoción"}</td>
-                                      <td>{formatCurrency(detalle.descuento_promocion)}</td>
-                                      <td><strong>{formatCurrency(detalle.precio_final)}</strong></td>
-                                    </tr>
-                                  ))}
-                                </tbody>
-                              </Table>
-                            </div>
+                            <>
+                              {/* Vista tabla para desktop */}
+                              <div className="d-none d-lg-block">
+                                <div className="table-responsive">
+                                  <Table striped bordered hover size="sm">
+                                    <thead className="table-primary">
+                                      <tr>
+                                        <th>Persona</th>
+                                        <th>Vínculo</th>
+                                        <th>Edad</th>
+                                        <th>Tipo Afiliación</th>
+                                        <th>Precio Base</th>
+                                        <th>Desc. Aporte</th>
+                                        <th>Promoción</th>
+                                        <th>Desc. Promo</th>
+                                        <th>Precio Final</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      {cotizacion.detalles.map((detalle, idx) => (
+                                        <tr key={idx}>
+                                          <td>{capitalizeName(detalle.persona)}</td>
+                                          <td>{detalle.vinculo}</td>
+                                          <td>{detalle.edad}</td>
+                                          <td>{detalle.tipo_afiliacion || TIPO_AFILIACION[detalle.tipo_afiliacion_id] || "Sin tipo"}</td>
+                                          <td>{formatCurrency(detalle.precio_base)}</td>
+                                          <td>{formatCurrency(detalle.descuento_aporte)}</td>
+                                          <td>{detalle.promocion_aplicada || "Sin promoción"}</td>
+                                          <td>{formatCurrency(detalle.descuento_promocion)}</td>
+                                          <td><strong>{formatCurrency(detalle.precio_final)}</strong></td>
+                                        </tr>
+                                      ))}
+                                    </tbody>
+                                  </Table>
+                                </div>
+                              </div>
+
+                              {/* Vista cards para móvil */}
+                              <div className="d-lg-none">
+                                {cotizacion.detalles.map((detalle, idx) => (
+                                  <Card key={idx} className="mb-2 border-start border-primary border-3">
+                                    <Card.Body className="p-3">
+                                      <div className="row g-2">
+                                        <div className="col-6">
+                                          <strong>{capitalizeName(detalle.persona)}</strong>
+                                          <br />
+                                          <small className="text-muted">{detalle.vinculo} - {detalle.edad} años</small>
+                                        </div>
+                                        <div className="col-6 text-end">
+                                          <span className="h6 text-primary">{formatCurrency(detalle.precio_final)}</span>
+                                        </div>
+                                        <div className="col-12">
+                                          <Badge bg="outline-secondary" className="me-1 mb-1">
+                                            {detalle.tipo_afiliacion || TIPO_AFILIACION[detalle.tipo_afiliacion_id] || "Sin tipo"}
+                                          </Badge>
+                                          {detalle.promocion_aplicada && (
+                                            <Badge bg="success" className="me-1 mb-1">
+                                              {detalle.promocion_aplicada}
+                                            </Badge>
+                                          )}
+                                        </div>
+                                        <div className="col-12">
+                                          <small className="text-muted">
+                                            Base: {formatCurrency(detalle.precio_base)} | 
+                                            Desc: {formatCurrency((detalle.descuento_aporte || 0) + (detalle.descuento_promocion || 0))}
+                                          </small>
+                                        </div>
+                                      </div>
+                                    </Card.Body>
+                                  </Card>
+                                ))}
+                              </div>
+                            </>
                           )}
                           
                           <hr />
-                          <div className="row text-center g-3">
-                            <div className="col-lg-4 col-sm-6">
+                          <div className="row text-center g-2">
+                            <div className="col-12 col-md-4">
                               <div className="border rounded p-2 h-100">
-                                <p className="mb-1"><strong>Total Bruto:</strong></p>
+                                <p className="mb-1 small"><strong>Total Bruto:</strong></p>
                                 <p className="text-info h6 mb-0">{formatCurrency(cotizacion.total_bruto)}</p>
                               </div>
                             </div>
-                            <div className="col-lg-4 col-sm-6">
+                            <div className="col-12 col-md-4">
                               <div className="border rounded p-2 h-100">
-                                <p className="mb-1"><strong>Total Descuentos:</strong></p>
+                                <p className="mb-1 small"><strong>Total Descuentos:</strong></p>
                                 <p className="text-warning h6 mb-1">
                                   {formatCurrency(parseFloat(cotizacion.total_descuento_aporte || 0) + parseFloat(cotizacion.total_descuento_promocion || 0))}
                                 </p>
-                                <small className="text-muted">
-                                  Aporte: {formatCurrency(cotizacion.total_descuento_aporte || 0)}<br/>
+                                <small className="text-muted d-block">
+                                  Aporte: {formatCurrency(cotizacion.total_descuento_aporte || 0)}
+                                </small>
+                                <small className="text-muted d-block">
                                   Promo: {formatCurrency(cotizacion.total_descuento_promocion || 0)}
                                 </small>
                               </div>
                             </div>
-                            <div className="col-lg-4 col-12">
+                            <div className="col-12 col-md-4">
                               <div className="border border-success rounded p-2 h-100 bg-light">
-                                <p className="mb-1"><strong>Total Final:</strong></p>
+                                <p className="mb-1 small"><strong>Total Final:</strong></p>
                                 <p className="text-success h5 mb-0">{formatCurrency(cotizacion.total_final)}</p>
                               </div>
                             </div>
@@ -404,21 +471,24 @@ const ProspectoDetalle = () => {
             <Card.Header className="bg-success text-white">
               <h5 className="mb-0"><FaUserCheck className="me-2" /> Promociones Disponibles</h5>
             </Card.Header>
-            <Card.Body>
+            <Card.Body className="p-2 p-md-3">
               {promociones.length === 0 ? (
-                <div className="text-muted text-center">Sin promociones</div>
+                <div className="text-muted text-center py-4">Sin promociones</div>
               ) : (
-                <Row xs={1} md={2} lg={3} className="g-4">
+                <Row xs={1} md={2} lg={3} className="g-3">
                   {promociones.map((promocion, index) => (
                     <Col key={index}>
-                      <Card className="h-100 shadow-sm">
+                      <Card className="h-100 shadow-sm border-success">
                         <Card.Header className="text-center bg-success text-white">
-                          <h5>{promocion.titulo}</h5>
+                          <h5 className="mb-0">{promocion.titulo}</h5>
                         </Card.Header>
-                        <Card.Body>
-                          <p><strong>Descripción:</strong> {promocion.descripcion}</p>
-                          <p><strong>Descuento:</strong> {promocion.descuento}%</p>
-                          <p><strong>Válido hasta:</strong> {new Date(promocion.fecha_vencimiento).toLocaleDateString()}</p>
+                        <Card.Body className="p-3">
+                          <p><strong>Descripción:</strong><br /> {promocion.descripcion}</p>
+                          <div className="d-flex justify-content-between align-items-center mb-2">
+                            <strong>Descuento:</strong>
+                            <Badge bg="success" className="fs-6">{promocion.descuento}%</Badge>
+                          </div>
+                          <p className="mb-0 small"><strong>Válido hasta:</strong><br /> {new Date(promocion.fecha_vencimiento).toLocaleDateString('es-ES')}</p>
                         </Card.Body>
                       </Card>
                     </Col>

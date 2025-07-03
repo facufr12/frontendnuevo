@@ -9,6 +9,9 @@ import {
   FaUserPlus, FaEdit, FaTrash, FaCheck, FaTimes, FaSearch, FaFilter, FaList, FaThLarge,
   FaEnvelope, FaPhone, FaUserTag, FaIdCard, FaSort, FaSortUp, FaSortDown, FaEye
 } from "react-icons/fa";
+import useScreenSize from "../../../hooks/useScreenSize";
+import '../vendedor/mobile-styles.css';
+import './admin-mobile-styles.css';
 
 const ROLES = [
   { value: 1, label: "Vendedor", color: "primary" },
@@ -27,6 +30,7 @@ const capitalizeName = (text) => {
 };
 
 const UsuariosAdmin = () => {
+  const { isMobile } = useScreenSize();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -47,6 +51,13 @@ const UsuariosAdmin = () => {
   const [ordenDir, setOrdenDir] = useState("asc");
   const [verDetalle, setVerDetalle] = useState(false);
   const [userDetalle, setUserDetalle] = useState(null);
+
+  // En móvil, forzar vista de tarjetas para mejor experiencia
+  useEffect(() => {
+    if (isMobile && tipoVista === "tabla") {
+      setTipoVista("tarjetas");
+    }
+  }, [isMobile, tipoVista]);
 
   useEffect(() => {
     fetchUsers();
@@ -268,36 +279,42 @@ const UsuariosAdmin = () => {
   }
 
   return (
-    <div className="admin-content">
+    <div className={`admin-content ${isMobile ? 'mobile-view' : ''}`}>
       {/* Barra de filtros y acciones */}
-      <Card className="admin-content shadow-sm mb-4">
-        <Card.Body>
+      <Card className={`admin-content shadow-sm mb-4 ${isMobile ? 'rounded-mobile' : ''}`}>
+        <Card.Body className={isMobile ? 'p-mobile' : ''}>
           {/* Primera fila: Búsqueda y botón nuevo (móvil first) */}
-          <Row className="mb-3">
-            <Col xs={12} md={8} className="mb-2 mb-md-0">
-              <InputGroup>
+          <Row className={`mb-3 ${isMobile ? 'usuarios-header-mobile' : ''}`}>
+            <Col xs={12} md={8} className={`mb-2 mb-md-0 ${isMobile ? 'search-bar-mobile' : ''}`}>
+              <InputGroup className={isMobile ? 'shadow-mobile' : ''}>
                 <InputGroup.Text><FaSearch /></InputGroup.Text>
                 <Form.Control
-                  placeholder="Buscar por nombre, email o teléfono"
+                  placeholder={isMobile ? "Buscar usuarios..." : "Buscar por nombre, email o teléfono"}
                   value={busqueda}
                   onChange={(e) => setBusqueda(e.target.value)}
+                  className={isMobile ? 'form-control-touch' : ''}
                 />
               </InputGroup>
             </Col>
             <Col xs={12} md={4} className="d-flex justify-content-md-end">
-              <Button variant="primary" className="rounded-3 w-100 w-md-auto" onClick={handleOpenCreate}>
-                <FaUserPlus className="me-1" /> Nuevo Usuario
+              <Button 
+                variant="primary" 
+                className={`w-100 w-md-auto btn-touch ${isMobile ? 'shadow-mobile' : 'rounded-3'}`}
+                onClick={handleOpenCreate}
+              >
+                <FaUserPlus className="me-2" /> 
+                {isMobile ? "Nuevo Usuario" : "Nuevo Usuario"}
               </Button>
             </Col>
           </Row>
           
           {/* Segunda fila: Filtros */}
-          <Row className="mb-3">
+          <Row className={`mb-3 ${isMobile ? 'filtros-mobile' : ''}`}>
             <Col xs={6} md={3} className="mb-2 mb-md-0">
               <Form.Select 
                 value={filtroRol} 
                 onChange={(e) => setFiltroRol(e.target.value)}
-                size="sm"
+                className={isMobile ? 'form-control-touch' : ''}
               >
                 <option value="">Todos los roles</option>
                 {ROLES.map(rol => (
@@ -309,47 +326,71 @@ const UsuariosAdmin = () => {
               <Form.Select 
                 value={filtroEstado} 
                 onChange={(e) => setFiltroEstado(e.target.value)}
-                size="sm"
+                className={isMobile ? 'form-control-touch' : ''}
               >
                 <option value="">Todos los estados</option>
-                <option value="habilitado">Habilitados</option>
-                <option value="deshabilitado">Deshabilitados</option>
+                <option value="habilitado">Activos</option>
+                <option value="deshabilitado">Inactivos</option>
               </Form.Select>
             </Col>
-            <Col xs={12} md={6} className="d-flex justify-content-md-end">
-              <div className="d-flex gap-2 w-100 w-md-auto">
-                <Button 
-                  variant={tipoVista === "tabla" ? "primary" : "outline-primary"} 
-                  size="sm"
-                  className="flex-fill flex-md-grow-0"
-                  onClick={() => setTipoVista("tabla")}
-                  title="Vista de tabla"
-                >
-                  <FaList />
-                </Button>
-                <Button 
-                  variant={tipoVista === "tarjetas" ? "primary" : "outline-primary"} 
-                  size="sm"
-                  className="flex-fill flex-md-grow-0"
-                  onClick={() => setTipoVista("tarjetas")}
-                  title="Vista de tarjetas"
-                >
-                  <FaThLarge />
-                </Button>
-              </div>
-            </Col>
+            {/* Solo mostrar el toggle de vista en desktop */}
+            {!isMobile && (
+              <Col xs={12} md={6} className="d-flex justify-content-md-end">
+                <div className="d-flex gap-2 w-100 w-md-auto">
+                  <Button 
+                    variant={tipoVista === "tabla" ? "primary" : "outline-primary"} 
+                    size="sm"
+                    className="flex-fill flex-md-grow-0"
+                    onClick={() => setTipoVista("tabla")}
+                    title="Vista de tabla"
+                  >
+                    <FaList />
+                  </Button>
+                  <Button 
+                    variant={tipoVista === "tarjetas" ? "primary" : "outline-primary"} 
+                    size="sm"
+                    className="flex-fill flex-md-grow-0"
+                    onClick={() => setTipoVista("tarjetas")}
+                    title="Vista de tarjetas"
+                  >
+                    <FaThLarge />
+                  </Button>
+                </div>
+              </Col>
+            )}
           </Row>
           
+          {/* Estadísticas rápidas en móvil */}
+          {isMobile && usuariosFiltrados.length > 0 && (
+            <div className="stats-mobile mb-3">
+              <div className="stat-card-mobile">
+                <div className="stat-number">{usuariosFiltrados.length}</div>
+                <div className="stat-label">Total</div>
+              </div>
+              <div className="stat-card-mobile">
+                <div className="stat-number">
+                  {usuariosFiltrados.filter(u => u.is_enabled).length}
+                </div>
+                <div className="stat-label">Activos</div>
+              </div>
+            </div>
+          )}
+          
           {alert.show && (
-            <Alert variant={alert.variant} onClose={handleCloseAlert} dismissible>
+            <Alert 
+              variant={alert.variant} 
+              onClose={handleCloseAlert} 
+              dismissible 
+              className={`mb-0 ${isMobile ? 'font-small-mobile' : ''}`}
+            >
               {alert.message}
             </Alert>
           )}
         </Card.Body>
       </Card>
 
-      {/* Vista de tabla */}
-      {tipoVista === "tabla" && (
+      {/* Vista de tabla - Solo en desktop */}
+      {tipoVista === "tabla" && !isMobile && (
         <Card className="admin-content shadow-sm">
           <Card.Body className="p-0">
             <Table responsive hover className="mb-0">
@@ -425,8 +466,8 @@ const UsuariosAdmin = () => {
         </Card>
       )}
 
-      {/* Vista de tarjetas */}
-      {tipoVista === "tarjetas" && (
+      {/* Vista de tarjetas - Mobile first y desktop */}
+      {(tipoVista === "tarjetas" || isMobile) && (
         <Row>
           {usuariosFiltrados.length === 0 ? (
             <Col className="text-center py-5">
@@ -434,52 +475,87 @@ const UsuariosAdmin = () => {
             </Col>
           ) : (
             usuariosFiltrados.map((user) => (
-              <Col key={user.id} lg={4} md={6} sm={12} className="mb-3">
-                <Card className="h-100 shadow-sm">
-                  <Card.Header className="d-flex justify-content-between align-items-center">
-                    <span className="fw-bold">{capitalizeName(user.first_name)} {capitalizeName(user.last_name)}</span>
-                    <Badge bg={user.is_enabled ? "success" : "secondary"}>
-                      {user.is_enabled ? "Habilitado" : "Deshabilitado"}
+              <Col key={user.id} lg={4} md={6} sm={12} className={`mb-3 ${isMobile ? 'mb-2' : ''}`}>
+                <Card className={`h-100 shadow-sm user-card-mobile fade-in-mobile`}>
+                  <Card.Header className="mobile-card-header d-flex justify-content-between align-items-center">
+                    <div className="user-name text-truncate-mobile">
+                      {capitalizeName(user.first_name)} {capitalizeName(user.last_name)}
+                    </div>
+                    <Badge 
+                      bg={user.is_enabled ? "success" : "secondary"} 
+                      className="ms-2"
+                    >
+                      {user.is_enabled ? "Activo" : "Inactivo"}
                     </Badge>
                   </Card.Header>
-                  <Card.Body>
-                    <div className="mb-3">
-                      <div className="d-flex align-items-center mb-2">
-                        <FaEnvelope className="me-2 text-muted" /> 
-                        <div>{user.email}</div>
+                  
+                  <Card.Body className="p-mobile">
+                    <div className="user-info mb-mobile">
+                      <div className="info-item mb-2">
+                        <FaEnvelope className="text-primary" />
+                        <span className="text-truncate-mobile">{user.email}</span>
                       </div>
-                      <div className="d-flex align-items-center mb-2">
-                        <FaPhone className="me-2 text-muted" /> 
-                        <div>{user.phone_number || "No disponible"}</div>
+                      
+                      <div className="info-item mb-2">
+                        <FaPhone className="text-success" />
+                        <span>{user.phone_number || "Sin teléfono"}</span>
                       </div>
-                      <div className="d-flex align-items-center mb-2">
-                        <FaUserTag className="me-2 text-muted" /> 
-                        <div>{getRoleBadge(user.role)}</div>
+                      
+                      <div className="info-item mb-2">
+                        <FaUserTag className="text-info" />
+                        <span>{getRoleBadge(user.role)}</span>
                       </div>
-                      <div className="d-flex align-items-center">
-                        <FaIdCard className="me-2 text-muted" /> 
-                        <div>ID: {user.id}</div>
+                      
+                      <div className="info-item">
+                        <FaIdCard className="text-muted" />
+                        <span>ID: {user.id}</span>
                       </div>
                     </div>
                   </Card.Body>
-                  <Card.Footer>
-                    <div className="d-flex justify-content-between">
-                      <Button size="sm" variant="primary" className="rounded-3" onClick={() => handleVerDetalle(user)}>
-                        <FaEye className="me-1" /> Ver
+                  
+                  <Card.Footer className="bg-light">
+                    <div className="actions-mobile">
+                      <Button 
+                        size="sm" 
+                        variant="primary" 
+                        className="btn-mobile btn-touch"
+                        onClick={() => handleVerDetalle(user)}
+                      >
+                        <FaEye className="me-1" />
+                        {isMobile ? "Ver" : "Detalles"}
                       </Button>
-                      <div className="d-flex gap-1">
-                        <Button size="sm" variant="warning" className="rounded-3" onClick={() => handleEdit(user)}>
-                          <FaEdit />
+                      
+                      <Button 
+                        size="sm" 
+                        variant="warning" 
+                        className="btn-mobile btn-touch"
+                        onClick={() => handleEdit(user)}
+                      >
+                        <FaEdit className={`${isMobile ? 'me-1' : ''}`} />
+                        {isMobile ? "Editar" : ""}
+                      </Button>
+                      
+                      <Button 
+                        size="sm" 
+                        variant="danger" 
+                        className="btn-mobile btn-touch"
+                        onClick={() => handleDelete(user.id)}
+                      >
+                        <FaTrash className={`${isMobile ? 'me-1' : ''}`} />
+                        {isMobile ? "Eliminar" : ""}
+                      </Button>
+                      
+                      {!user.is_enabled && (
+                        <Button 
+                          size="sm" 
+                          variant="success" 
+                          className="btn-mobile btn-touch"
+                          onClick={() => handleEnable(user.id)}
+                        >
+                          <FaCheck className={`${isMobile ? 'me-1' : ''}`} />
+                          {isMobile ? "Activar" : ""}
                         </Button>
-                        <Button size="sm" variant="danger" className="rounded-3" onClick={() => handleDelete(user.id)}>
-                          <FaTrash />
-                        </Button>
-                        {!user.is_enabled && (
-                          <Button size="sm" variant="success" className="rounded-3" onClick={() => handleEnable(user.id)}>
-                            <FaCheck />
-                          </Button>
-                        )}
-                      </div>
+                      )}
                     </div>
                   </Card.Footer>
                 </Card>
@@ -490,61 +566,74 @@ const UsuariosAdmin = () => {
       )}
 
       {/* Modal para crear/editar usuario */}
-      <Modal show={formOpen} onHide={() => setFormOpen(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>{selectedUser ? "Editar Usuario" : "Crear Usuario"}</Modal.Title>
+      <Modal 
+        show={formOpen} 
+        onHide={() => setFormOpen(false)}
+        size={isMobile ? "xl" : "lg"}
+        fullscreen={isMobile ? "sm-down" : false}
+        className={isMobile ? 'mobile-modal' : ''}
+      >
+        <Modal.Header closeButton className={isMobile ? 'mobile-modal-header' : ''}>
+          <Modal.Title className={isMobile ? 'mobile-modal-title' : ''}>
+            {selectedUser ? "Editar Usuario" : "Crear Usuario"}
+          </Modal.Title>
         </Modal.Header>
         <Form onSubmit={handleSubmit}>
-          <Modal.Body>
+          <Modal.Body className={isMobile ? 'mobile-modal-body' : ''}>
             <Row>
               <Col md={6}>
                 <Form.Group className="mb-3">
-                  <Form.Label>Nombre</Form.Label>
+                  <Form.Label className={isMobile ? 'mobile-form-label' : ''}>Nombre</Form.Label>
                   <Form.Control
                     name="first_name"
                     value={formData.first_name}
                     onChange={handleChange}
                     required
+                    className={isMobile ? 'mobile-form-control' : ''}
                   />
                 </Form.Group>
               </Col>
               <Col md={6}>
                 <Form.Group className="mb-3">
-                  <Form.Label>Apellido</Form.Label>
+                  <Form.Label className={isMobile ? 'mobile-form-label' : ''}>Apellido</Form.Label>
                   <Form.Control
                     name="last_name"
                     value={formData.last_name}
                     onChange={handleChange}
                     required
+                    className={isMobile ? 'mobile-form-control' : ''}
                   />
                 </Form.Group>
               </Col>
             </Row>
             <Form.Group className="mb-3">
-              <Form.Label>Correo Electrónico</Form.Label>
+              <Form.Label className={isMobile ? 'mobile-form-label' : ''}>Correo Electrónico</Form.Label>
               <Form.Control
                 name="email"
                 type="email"
                 value={formData.email}
                 onChange={handleChange}
                 required
+                className={isMobile ? 'mobile-form-control' : ''}
               />
             </Form.Group>
             <Form.Group className="mb-3">
-              <Form.Label>Teléfono</Form.Label>
+              <Form.Label className={isMobile ? 'mobile-form-label' : ''}>Teléfono</Form.Label>
               <Form.Control
                 name="phone_number"
                 value={formData.phone_number}
                 onChange={handleChange}
+                className={isMobile ? 'mobile-form-control' : ''}
               />
             </Form.Group>
             <Form.Group className="mb-3">
-              <Form.Label>Rol</Form.Label>
+              <Form.Label className={isMobile ? 'mobile-form-label' : ''}>Rol</Form.Label>
               <Form.Select
                 name="role"
                 value={formData.role}
                 onChange={handleChange}
                 required
+                className={isMobile ? 'mobile-form-control' : ''}
               >
                 {ROLES.map(r => (
                   <option key={r.value} value={r.value}>{r.label}</option>
@@ -552,11 +641,19 @@ const UsuariosAdmin = () => {
               </Form.Select>
             </Form.Group>
           </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" className="rounded-3" onClick={() => setFormOpen(false)}>
+          <Modal.Footer className={isMobile ? 'mobile-modal-footer' : ''}>
+            <Button 
+              variant="secondary" 
+              className={`rounded-3 ${isMobile ? 'mobile-btn mobile-btn-secondary flex-fill me-2' : ''}`} 
+              onClick={() => setFormOpen(false)}
+            >
               Cancelar
             </Button>
-            <Button type="submit" variant="primary" className="rounded-3">
+            <Button 
+              type="submit" 
+              variant="primary" 
+              className={`rounded-3 ${isMobile ? 'mobile-btn mobile-btn-primary flex-fill' : ''}`}
+            >
               {selectedUser ? "Actualizar" : "Crear"}
             </Button>
           </Modal.Footer>
@@ -564,38 +661,70 @@ const UsuariosAdmin = () => {
       </Modal>
 
       {/* Modal para ver detalles */}
-      <Modal show={verDetalle} onHide={() => setVerDetalle(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Detalles del Usuario</Modal.Title>
+      <Modal 
+        show={verDetalle} 
+        onHide={() => setVerDetalle(false)}
+        size={isMobile ? "xl" : "lg"}
+        fullscreen={isMobile ? "sm-down" : false}
+        className={isMobile ? 'mobile-modal' : ''}
+      >
+        <Modal.Header closeButton className={isMobile ? 'mobile-modal-header' : ''}>
+          <Modal.Title className={isMobile ? 'mobile-modal-title' : ''}>Detalles del Usuario</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body className={isMobile ? 'mobile-modal-body' : ''}>
           {userDetalle && (
-            <div>
-              <p><strong>ID:</strong> {userDetalle.id}</p>
-              <p><strong>Nombre completo:</strong> {capitalizeName(userDetalle.first_name)} {capitalizeName(userDetalle.last_name)}</p>
-              <p><strong>Email:</strong> {userDetalle.email}</p>
-              <p><strong>Teléfono:</strong> {userDetalle.phone_number || "No disponible"}</p>
-              <p><strong>Rol:</strong> {ROLES.find(r => r.value === userDetalle.role)?.label || "Desconocido"}</p>
-              <p><strong>Estado:</strong> {userDetalle.is_enabled ? "Habilitado" : "Deshabilitado"}</p>
-              <p><strong>Fecha de creación:</strong> {new Date(userDetalle.created_at).toLocaleString()}</p>
+            <div className={isMobile ? 'mobile-detail-content' : ''}>
+              <div className={isMobile ? 'mobile-detail-item' : 'mb-2'}>
+                <strong>ID:</strong> {userDetalle.id}
+              </div>
+              <div className={isMobile ? 'mobile-detail-item' : 'mb-2'}>
+                <strong>Nombre completo:</strong> {capitalizeName(userDetalle.first_name)} {capitalizeName(userDetalle.last_name)}
+              </div>
+              <div className={isMobile ? 'mobile-detail-item' : 'mb-2'}>
+                <strong>Email:</strong> {userDetalle.email}
+              </div>
+              <div className={isMobile ? 'mobile-detail-item' : 'mb-2'}>
+                <strong>Teléfono:</strong> {userDetalle.phone_number || "No disponible"}
+              </div>
+              <div className={isMobile ? 'mobile-detail-item' : 'mb-2'}>
+                <strong>Rol:</strong> {ROLES.find(r => r.value === userDetalle.role)?.label || "Desconocido"}
+              </div>
+              <div className={isMobile ? 'mobile-detail-item' : 'mb-2'}>
+                <strong>Estado:</strong> {userDetalle.is_enabled ? "Habilitado" : "Deshabilitado"}
+              </div>
+              <div className={isMobile ? 'mobile-detail-item' : 'mb-2'}>
+                <strong>Fecha de creación:</strong> {new Date(userDetalle.created_at).toLocaleString()}
+              </div>
               {userDetalle.updated_at && (
-                <p><strong>Última actualización:</strong> {new Date(userDetalle.updated_at).toLocaleString()}</p>
+                <div className={isMobile ? 'mobile-detail-item' : 'mb-2'}>
+                  <strong>Última actualización:</strong> {new Date(userDetalle.updated_at).toLocaleString()}
+                </div>
               )}
               {userDetalle.email_verified_at && (
-                <p><strong>Email verificado:</strong> {new Date(userDetalle.email_verified_at).toLocaleString()}</p>
+                <div className={isMobile ? 'mobile-detail-item' : 'mb-2'}>
+                  <strong>Email verificado:</strong> {new Date(userDetalle.email_verified_at).toLocaleString()}
+                </div>
               )}
             </div>
           )}
         </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" className="rounded-3" onClick={() => setVerDetalle(false)}>
+        <Modal.Footer className={isMobile ? 'mobile-modal-footer' : ''}>
+          <Button 
+            variant="secondary" 
+            className={`rounded-3 ${isMobile ? 'mobile-btn mobile-btn-secondary flex-fill me-2' : ''}`} 
+            onClick={() => setVerDetalle(false)}
+          >
             Cerrar
           </Button>
           {userDetalle && (
-            <Button variant="warning" className="rounded-3" onClick={() => {
-              setVerDetalle(false);
-              handleEdit(userDetalle);
-            }}>
+            <Button 
+              variant="warning" 
+              className={`rounded-3 ${isMobile ? 'mobile-btn mobile-btn-warning flex-fill' : ''}`} 
+              onClick={() => {
+                setVerDetalle(false);
+                handleEdit(userDetalle);
+              }}
+            >
               Editar
             </Button>
           )}

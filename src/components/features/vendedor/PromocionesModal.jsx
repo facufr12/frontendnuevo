@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { Modal, Button, Form, Card, Alert } from "react-bootstrap";
+import { Modal, Button, Form, Card, Alert, Badge } from "react-bootstrap";
+import { FaMoneyBillWave } from "react-icons/fa";
 import axios from "axios";
 import Swal from "sweetalert2"; // Añadir esta importación
 import ThemeToggle from "../../common/ThemeToggle";
@@ -22,7 +23,7 @@ const PromocionesModal = ({ prospectoId, show, onClose, onPromocionAplicada }) =
     try {
       const token = localStorage.getItem("token");
       const { data } = await axios.get(
-        "https://wspflows.cober.online/api/vendedor/promociones",
+        "/api/vendedor/promociones",
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -38,7 +39,7 @@ const PromocionesModal = ({ prospectoId, show, onClose, onPromocionAplicada }) =
     try {
       const token = localStorage.getItem("token");
       const { data } = await axios.get(
-        `https://wspflows.cober.online/api/vendedor/prospectos/${prospectoId}/promocion-actual`,
+        `/api/vendedor/prospectos/${prospectoId}/promocion-actual`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -70,7 +71,7 @@ const PromocionesModal = ({ prospectoId, show, onClose, onPromocionAplicada }) =
     try {
       const token = localStorage.getItem("token");
       await axios.post(
-        `https://wspflows.cober.online/api/vendedor/prospectos/${prospectoId}/aplicar-promocion`,
+        `/api/vendedor/prospectos/${prospectoId}/aplicar-promocion`,
         { promocionId: selectedPromocion.id },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -113,26 +114,39 @@ const PromocionesModal = ({ prospectoId, show, onClose, onPromocionAplicada }) =
   };
 
   return (
-    <Modal show={show} onHide={onClose} size="lg" centered className="vendor-modal">
-      <Modal.Header closeButton className="border-bottom">
-        <Modal.Title className="fw-bold">Aplicar Promoción</Modal.Title>
-        <div className="ms-auto me-2">
+    <Modal 
+      show={show} 
+      onHide={onClose} 
+      size="lg" 
+      centered 
+      className="vendor-modal"
+      fullscreen="sm-down"
+    >
+      <Modal.Header closeButton className="border-bottom bg-primary text-white">
+        <Modal.Title className="fw-bold h5">Aplicar Promoción</Modal.Title>
+        <div className="ms-auto me-2 d-none d-md-block">
           <ThemeToggle />
         </div>
       </Modal.Header>
-      <Modal.Body className="p-4">
+      <Modal.Body className="p-2 p-md-4">
         {promocionActual && (
           <Alert variant="info" className="mb-3 border-0 shadow-sm rounded-3">
             <h6 className="mb-2 fw-bold">Promoción actual aplicada:</h6>
-            <p className="mb-1">
-              <strong>{promocionActual.nombre || promocionActual.titulo}</strong> -{" "}
-              {promocionActual.descuento_porcentaje || promocionActual.descuento}%
-            </p>
-            <p className="mb-0 small text-muted">{promocionActual.descripcion}</p>
+            <div className="d-flex flex-column flex-sm-row justify-content-between align-items-start">
+              <div>
+                <p className="mb-1">
+                  <strong>{promocionActual.nombre || promocionActual.titulo}</strong>
+                </p>
+                <p className="mb-2 small text-muted">{promocionActual.descripcion}</p>
+              </div>
+              <Badge bg="info" className="fs-6 mt-2 mt-sm-0">
+                {promocionActual.descuento_porcentaje || promocionActual.descuento}%
+              </Badge>
+            </div>
           </Alert>
         )}
 
-        {error && <Alert variant="danger" className="border-0 shadow-sm rounded-3">{error}</Alert>}
+        {error && <Alert variant="danger" className="border-0 shadow-sm rounded-3 mb-3">{error}</Alert>}
 
         <Form>
           <Form.Group>
@@ -142,9 +156,9 @@ const PromocionesModal = ({ prospectoId, show, onClose, onPromocionAplicada }) =
                 <p>No hay promociones disponibles</p>
               </div>
             ) : (
-              <div className="row g-3">
+              <div className="row g-2 g-md-3">
                 {promociones.map((promocion) => (
-                  <div key={promocion.id} className="col-lg-6 col-md-12">
+                  <div key={promocion.id} className="col-12 col-md-6">
                     <Card
                       className={`h-100 shadow-sm cursor-pointer vendor-promocion-card ${
                         selectedPromocion?.id === promocion.id 
@@ -163,7 +177,7 @@ const PromocionesModal = ({ prospectoId, show, onClose, onPromocionAplicada }) =
                           <Card.Title className="h6 mb-0 fw-bold text-primary">
                             {promocion.nombre || promocion.titulo}
                           </Card.Title>
-                          <span className="badge bg-primary fs-6 rounded-pill px-3 py-2">
+                          <span className="badge bg-primary fs-6 rounded-pill px-2 py-1 ms-2">
                             {promocion.descuento_porcentaje || promocion.descuento}% OFF
                           </span>
                         </div>
@@ -187,13 +201,17 @@ const PromocionesModal = ({ prospectoId, show, onClose, onPromocionAplicada }) =
           </Form.Group>
         </Form>
       </Modal.Body>
-      <Modal.Footer className="d-flex gap-2 justify-content-end border-top p-3">
-        <Button variant="outline-secondary" className="rounded-3 px-4" onClick={onClose}>
+      <Modal.Footer className="d-flex flex-column flex-md-row gap-2 justify-content-end border-top p-3">
+        <Button 
+          variant="outline-secondary" 
+          className="rounded-3 px-4 w-100 w-md-auto order-2 order-md-1" 
+          onClick={onClose}
+        >
           Cancelar
         </Button>
         <Button
           variant="primary"
-          className="rounded-3 px-4"
+          className="rounded-3 px-4 w-100 w-md-auto order-1 order-md-2"
           onClick={handleAplicarPromocion}
           disabled={loading || !selectedPromocion}
         >
@@ -203,7 +221,10 @@ const PromocionesModal = ({ prospectoId, show, onClose, onPromocionAplicada }) =
               Aplicando...
             </>
           ) : (
-            "Aplicar Promoción"
+            <>
+              <FaMoneyBillWave className="me-2 d-md-none" />
+              Aplicar Promoción
+            </>
           )}
         </Button>
       </Modal.Footer>

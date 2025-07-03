@@ -3,6 +3,7 @@ import axios from "axios";
 import { ENDPOINTS } from "../../config";
 import Swal from "sweetalert2";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "./mobile-styles.css";
 import { FaWhatsapp, FaSearch, FaPlus, FaUserPlus, FaFilter, FaListAlt, FaTachometerAlt, FaUsers, FaSignOutAlt, FaStore, FaBars, FaChevronLeft, FaEdit, FaEye, FaUserCheck, FaComment, FaUser, FaEnvelope, FaPhone, FaHome, FaIdBadge, FaCalendarAlt, FaMoneyBillWave, FaList, FaThLarge } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
@@ -10,6 +11,7 @@ import PromocionesModal from "./PromocionesModal";
 import ThemeToggle from "../../common/ThemeToggle";
 import logoSrc from "../../../assets/logo-cober.webp";
 import { Container, Row, Col, Button, Modal, Offcanvas, ListGroup, Spinner, Badge, Form, Table, Card, ButtonGroup, ProgressBar } from "react-bootstrap";
+import useScreenSize from "../../../hooks/useScreenSize";
 
 const drawerWidth = 220;
 
@@ -64,6 +66,9 @@ const ProspectosDashboard = () => {
   const [showFormModal, setShowFormModal] = useState(false);
   const [modalHistorial, setModalHistorial] = useState(false);
   const [historial, setHistorial] = useState([]);
+
+  // Hook para detectar el tamaño de pantalla
+  const { isMobile, isTablet, isDesktop } = useScreenSize();
 
   const navigate = useNavigate();
 
@@ -403,7 +408,7 @@ const ProspectosDashboard = () => {
     <div className="d-flex vendor-main-container" style={{ minHeight: "100vh" }}>
       {/* Sidebar fijo para escritorio */}
       <div
-        className="d-none d-md-block vendor-sidebar border-end"
+        className="d-none d-lg-block vendor-sidebar border-end"
         style={{ width: drawerWidth, minHeight: "100vh", position: "fixed", zIndex: 1030 }}
       >
         {drawerContent}
@@ -412,26 +417,32 @@ const ProspectosDashboard = () => {
       <Offcanvas
         show={openDrawer}
         onHide={() => setOpenDrawer(false)}
-        backdrop={false}
+        backdrop={isMobile}
         scroll={true}
-        style={{ width: drawerWidth }}
-        className="d-md-none"
+        style={{ width: isMobile ? "280px" : drawerWidth }}
+        className="d-lg-none"
       >
         {drawerContent}
       </Offcanvas>
       {/* Contenido principal */}
-      <div style={{ flex: 1, marginLeft: window.innerWidth >= 768 ? drawerWidth : 0 }}>
-        {/* Topbar */}
-        <div className="d-flex align-items-center justify-content-between px-3 py-2 border-bottom vendor-topbar" style={{ minHeight: 56 }}>
+      <div style={{ flex: 1, marginLeft: isDesktop ? drawerWidth : 0 }}>
+        {/* Topbar optimizado para móviles */}
+        <div className={`d-flex align-items-center justify-content-between border-bottom vendor-topbar sticky-top bg-white ${isMobile ? 'px-2 py-2' : 'px-3 py-2'}`} style={{ minHeight: isMobile ? 50 : 56, zIndex: 1020 }}>
           <div className="d-flex align-items-center">
-            <Button variant="light" className="d-md-none me-2" onClick={() => setOpenDrawer(true)}>
+            <Button 
+              variant="light" 
+              className="d-lg-none me-2" 
+              size={isMobile ? "sm" : "md"}
+              onClick={() => setOpenDrawer(true)}
+            >
               <FaBars />
             </Button>
-            <span className="fw-bold fs-5 d-none d-md-block">Gestión de Prospectos</span>
-            <span className="fw-bold fs-6 d-md-none">Prospectos</span>
+            <span className={`fw-bold ${isMobile ? 'fs-6' : 'fs-5'} d-none d-sm-block`}>Gestión de Prospectos</span>
+            <span className="fw-bold fs-6 d-sm-none">Prospectos</span>
           </div>
           <div className="d-flex align-items-center gap-2">
-            <ButtonGroup className="d-none d-lg-flex">
+            {/* Botones de vista - solo en desktop y tablet */}
+            <ButtonGroup className="d-none d-md-flex">
               <Button 
                 variant={tipoVista === "tabla" ? "primary" : "outline-primary"} 
                 size="sm"
@@ -449,83 +460,171 @@ const ProspectosDashboard = () => {
                 <FaThLarge />
               </Button>
             </ButtonGroup>
-            <Button variant="primary" size="sm" className="rounded-3" onClick={() => setShowFormModal(true)}>
-              <FaPlus className="me-1 d-none d-sm-inline" /> 
+            <Button 
+              variant="primary" 
+              size={isMobile ? "sm" : "md"}
+              className="rounded-3" 
+              onClick={() => setShowFormModal(true)}
+            >
+              <FaPlus className={`${isMobile ? 'me-1' : 'me-2'} d-none d-sm-inline`} /> 
               <span className="d-none d-md-inline">Nuevo Prospecto</span>
               <span className="d-md-none">Nuevo</span>
             </Button>
             <ThemeToggle />
           </div>
         </div>
-        <Container fluid className="py-3">
-          {/* Formulario de filtros */}
-          <div className="vendor-content shadow-sm p-3 mb-3">
-            <Row className="g-2">
-              <Col lg={3} md={4} sm={6}>
-                <Form.Control
-                  placeholder="Filtrar por nombre"
-                  name="nombre"
-                  value={filtros.nombre}
-                  onChange={handleFiltroChange}
-                  size="sm"
-                />
-              </Col>
-              <Col lg={3} md={4} sm={6}>
-                <Form.Control
-                  placeholder="Filtrar por apellido"
-                  name="apellido"
-                  value={filtros.apellido}
-                  onChange={handleFiltroChange}
-                  size="sm"
-                />
-              </Col>
-              <Col lg={2} md={4} sm={6}>
-                <Form.Control
-                  placeholder="Edad"
-                  name="edad"
-                  value={filtros.edad}
-                  onChange={handleFiltroChange}
-                  size="sm"
-                  type="number"
-                  min="0"
-                />
-              </Col>
-              <Col lg={3} sm={6}>
-                <Form.Control
-                  placeholder="Estado"
-                  name="estado"
-                  value={filtros.estado}
-                  onChange={handleFiltroChange}
-                  size="sm"
-                />
-              </Col>
-              <Col lg={1} sm={12} className="d-flex gap-2">
-                <Button
-                  variant="outline-secondary"
-                  size="sm"
-                  className="rounded-3"
-                  onClick={() => setFiltros({ nombre: "", apellido: "", edad: "", estado: "" })}
-                >
-                  Limpiar
-                </Button>
-                <Button 
-                  variant={tipoVista === "tabla" ? "primary" : "outline-primary"} 
-                  size="sm" 
-                  className="rounded-3 d-none d-sm-inline-block"
-                  onClick={() => setTipoVista("tabla")}
-                >
-                  <FaList />
-                </Button>
-                <Button 
-                  variant={tipoVista === "tarjetas" ? "primary" : "outline-primary"} 
-                  size="sm" 
-                  className="rounded-3"
-                  onClick={() => setTipoVista("tarjetas")}
-                >
-                  <FaThLarge />
-                </Button>
-              </Col>
-            </Row>
+        <Container fluid className={`${isMobile ? 'px-2 py-2' : 'py-3'}`}>
+          {/* Formulario de filtros optimizado para móviles */}
+          <div className={`vendor-content shadow-sm ${isMobile ? 'p-2' : 'p-3'} mb-3`}>
+            {isMobile ? (
+              // Layout compacto para móviles
+              <>
+                <Row className="g-2 mb-2">
+                  <Col xs={6}>
+                    <Form.Control
+                      placeholder="Nombre"
+                      name="nombre"
+                      value={filtros.nombre}
+                      onChange={handleFiltroChange}
+                      size="sm"
+                    />
+                  </Col>
+                  <Col xs={6}>
+                    <Form.Control
+                      placeholder="Apellido"
+                      name="apellido"
+                      value={filtros.apellido}
+                      onChange={handleFiltroChange}
+                      size="sm"
+                    />
+                  </Col>
+                </Row>
+                <Row className="g-2 mb-2">
+                  <Col xs={4}>
+                    <Form.Control
+                      placeholder="Edad"
+                      name="edad"
+                      value={filtros.edad}
+                      onChange={handleFiltroChange}
+                      size="sm"
+                      type="number"
+                      min="0"
+                    />
+                  </Col>
+                  <Col xs={8}>
+                    <Form.Control
+                      placeholder="Estado"
+                      name="estado"
+                      value={filtros.estado}
+                      onChange={handleFiltroChange}
+                      size="sm"
+                    />
+                  </Col>
+                </Row>
+                <Row className="g-1">
+                  <Col xs={6}>
+                    <Button
+                      variant="outline-secondary"
+                      size="sm"
+                      className="rounded-3 w-100"
+                      onClick={() => setFiltros({ nombre: "", apellido: "", edad: "", estado: "" })}
+                    >
+                      <small>Limpiar</small>
+                    </Button>
+                  </Col>
+                  <Col xs={6}>
+                    <ButtonGroup className="w-100">
+                      <Button 
+                        variant={tipoVista === "tabla" ? "primary" : "outline-primary"} 
+                        size="sm" 
+                        className="rounded-start"
+                        onClick={() => setTipoVista("tabla")}
+                        title="Tabla"
+                      >
+                        <FaList />
+                      </Button>
+                      <Button 
+                        variant={tipoVista === "tarjetas" ? "primary" : "outline-primary"} 
+                        size="sm" 
+                        className="rounded-end"
+                        onClick={() => setTipoVista("tarjetas")}
+                        title="Tarjetas"
+                      >
+                        <FaThLarge />
+                      </Button>
+                    </ButtonGroup>
+                  </Col>
+                </Row>
+              </>
+            ) : (
+              // Layout original para desktop/tablet
+              <Row className="g-2">
+                <Col lg={3} md={4} sm={6}>
+                  <Form.Control
+                    placeholder="Filtrar por nombre"
+                    name="nombre"
+                    value={filtros.nombre}
+                    onChange={handleFiltroChange}
+                    size="sm"
+                  />
+                </Col>
+                <Col lg={3} md={4} sm={6}>
+                  <Form.Control
+                    placeholder="Filtrar por apellido"
+                    name="apellido"
+                    value={filtros.apellido}
+                    onChange={handleFiltroChange}
+                    size="sm"
+                  />
+                </Col>
+                <Col lg={2} md={4} sm={6}>
+                  <Form.Control
+                    placeholder="Edad"
+                    name="edad"
+                    value={filtros.edad}
+                    onChange={handleFiltroChange}
+                    size="sm"
+                    type="number"
+                    min="0"
+                  />
+                </Col>
+                <Col lg={3} sm={6}>
+                  <Form.Control
+                    placeholder="Estado"
+                    name="estado"
+                    value={filtros.estado}
+                    onChange={handleFiltroChange}
+                    size="sm"
+                  />
+                </Col>
+                <Col lg={1} sm={12} className="d-flex gap-2">
+                  <Button
+                    variant="outline-secondary"
+                    size="sm"
+                    className="rounded-3"
+                    onClick={() => setFiltros({ nombre: "", apellido: "", edad: "", estado: "" })}
+                  >
+                    Limpiar
+                  </Button>
+                  <Button 
+                    variant={tipoVista === "tabla" ? "primary" : "outline-primary"} 
+                    size="sm" 
+                    className="rounded-3 d-none d-sm-inline-block"
+                    onClick={() => setTipoVista("tabla")}
+                  >
+                    <FaList />
+                  </Button>
+                  <Button 
+                    variant={tipoVista === "tarjetas" ? "primary" : "outline-primary"} 
+                    size="sm" 
+                    className="rounded-3"
+                    onClick={() => setTipoVista("tarjetas")}
+                  >
+                    <FaThLarge />
+                  </Button>
+                </Col>
+              </Row>
+            )}
           </div>
 
           {/* Vista de tabla */}
@@ -658,46 +757,62 @@ const ProspectosDashboard = () => {
             </div>
           )}
 
-          {/* Vista de tarjetas */}
+          {/* Vista de tarjetas optimizada para móviles */}
           {tipoVista === "tarjetas" && (
-            <Row>
+            <Row className={isMobile ? "g-2" : ""}>
               {prospectosFiltrados.map((prospecto) => {
                 const values = editValues[prospecto.id] || {};
                 const estadoActual = values.estado !== undefined ? values.estado : prospecto.estado;
                 const progreso = estadoPorcentaje[estadoActual] || 0;
                 return (
-                  <Col xl={4} lg={6} md={12} key={prospecto.id} className="mb-3">
-                    <Card className="h-100 shadow-sm vendor-content">
-                      <Card.Header className="d-flex justify-content-between align-items-start">
+                  <Col 
+                    xl={4} 
+                    lg={6} 
+                    md={12} 
+                    sm={6}
+                    xs={12}
+                    key={prospecto.id} 
+                    className={`${isMobile ? 'mb-2' : 'mb-3'}`}
+                  >
+                    <Card className={`h-100 shadow-sm vendor-content ${isMobile ? 'card-mobile' : ''}`}>
+                      <Card.Header className={`d-flex justify-content-between align-items-start ${isMobile ? 'p-2 pb-1' : ''}`}>
                         <div className="flex-grow-1">
-                          <h5 className="fw-bold mb-1 text-truncate">
+                          <h5 className={`fw-bold mb-1 text-truncate ${isMobile ? 'fs-6' : ''}`}>
                             {capitalizeName(prospecto.nombre)} {capitalizeName(prospecto.apellido)}
                           </h5>
                           <small className="text-muted">{prospecto.edad} años</small>
                         </div>
-                        <Badge bg={
-                          progreso === 100 ? "success" : 
-                          progreso > 50 ? "primary" : 
-                          progreso > 0 ? "warning" : 
-                          "danger"
-                        } className="ms-2">
-                          {prospecto.estado}
+                        <Badge 
+                          bg={
+                            progreso === 100 ? "success" : 
+                            progreso > 50 ? "primary" : 
+                            progreso > 0 ? "warning" : 
+                            "danger"
+                          } 
+                          className={`ms-2 ${isMobile ? 'badge-mobile' : ''}`}
+                          style={isMobile ? { fontSize: '0.7rem' } : {}}
+                        >
+                          {isMobile ? prospecto.estado.slice(0, 8) + (prospecto.estado.length > 8 ? '...' : '') : prospecto.estado}
                         </Badge>
                       </Card.Header>
-                      <Card.Body className="p-3">
-                        <div className="mb-2">
-                          <small className="text-muted d-block mb-1">Tipo de Afiliación:</small>
-                          <small className="fw-medium">
-                            {tiposAfiliacion.find(t => t.id === Number(prospecto.tipo_afiliacion_id))?.etiqueta || "Sin datos"}
-                          </small>
-                        </div>
+                      <Card.Body className={`${isMobile ? 'p-2' : 'p-3'}`}>
+                        {!isMobile && (
+                          <div className="mb-2">
+                            <small className="text-muted d-block mb-1">Tipo de Afiliación:</small>
+                            <small className="fw-medium">
+                              {tiposAfiliacion.find(t => t.id === Number(prospecto.tipo_afiliacion_id))?.etiqueta || "Sin datos"}
+                            </small>
+                          </div>
+                        )}
                         
-                        <div className="mb-2">
+                        <div className={`${isMobile ? 'mb-1' : 'mb-2'}`}>
                           <small className="text-muted d-block mb-1">Contacto:</small>
                           <div className="d-flex align-items-center flex-wrap">
                             <div className="d-flex align-items-center me-2 mb-1">
-                              <FaPhone className="me-1 text-muted" size={12} /> 
-                              <small>{prospecto.numero_contacto || "No disponible"}</small>
+                              <FaPhone className="me-1 text-muted" size={isMobile ? 10 : 12} /> 
+                              <small className={isMobile ? 'text-truncate' : ''} style={isMobile ? { maxWidth: '120px' } : {}}>
+                                {prospecto.numero_contacto || "No disponible"}
+                              </small>
                               {prospecto.numero_contacto && (
                                 <a
                                   href={`https://wa.me/${prospecto.numero_contacto.replace(/\D/g, "")}`}
@@ -706,18 +821,18 @@ const ProspectosDashboard = () => {
                                   className="ms-1 text-success"
                                   title="Contactar por WhatsApp"
                                 >
-                                  <FaWhatsapp size={16} />
+                                  <FaWhatsapp size={isMobile ? 14 : 16} />
                                 </a>
                               )}
                             </div>
                           </div>
-                          {prospecto.correo && (
+                          {!isMobile && prospecto.correo && (
                             <div className="d-flex align-items-center mb-1">
                               <MdEmail className="me-1 text-muted" size={12} /> 
                               <small className="text-truncate">{prospecto.correo}</small>
                             </div>
                           )}
-                          {prospecto.localidad && (
+                          {!isMobile && prospecto.localidad && (
                             <div className="d-flex align-items-center mb-1">
                               <FaHome className="me-1 text-muted" size={12} /> 
                               <small>{prospecto.localidad}</small>
@@ -725,11 +840,11 @@ const ProspectosDashboard = () => {
                           )}
                         </div>
                         
-                        <div className="mb-2">
+                        <div className={`${isMobile ? 'mb-1' : 'mb-2'}`}>
                           <small className="text-muted d-block mb-1">Comentario:</small>
                           <Form.Control
                             as="textarea"
-                            rows={2}
+                            rows={isMobile ? 1 : 2}
                             name="comentario"
                             value={values.comentario !== undefined ? values.comentario : prospecto.comentario || ""}
                             onChange={(e) => handleCardChange(prospecto.id, "comentario", e.target.value)}
@@ -739,7 +854,7 @@ const ProspectosDashboard = () => {
                           />
                         </div>
                         
-                        <div className="mb-3">
+                        <div className={`${isMobile ? 'mb-2' : 'mb-3'}`}>
                           <small className="text-muted d-block mb-1">Estado:</small>
                           <Form.Select 
                             className="mb-2"
@@ -767,27 +882,28 @@ const ProspectosDashboard = () => {
                           </Form.Select>
                         </div>
                         
-                        <div className="mb-3">
+                        <div className={`${isMobile ? 'mb-2' : 'mb-3'}`}>
                           <small className="text-muted d-block mb-1">Progreso:</small>
                           <ProgressBar 
                             now={progreso} 
-                            label={`${progreso}%`} 
+                            label={isMobile ? `${progreso}%` : `${progreso}%`}
                             variant={
                               progreso === 100 ? "success" : 
                               progreso > 50 ? "primary" : 
                               progreso > 0 ? "warning" : 
                               "danger"
                             }
+                            style={{ height: isMobile ? '16px' : '20px' }}
                           />
                         </div>
                       </Card.Body>
-                      <Card.Footer className="d-flex justify-content-between align-items-center">
+                      <Card.Footer className={`d-flex justify-content-between align-items-center ${isMobile ? 'p-2 pt-1' : ''}`}>
                         <div>
                           <small className="text-muted">ID: {prospecto.id}</small>
                         </div>
-                        <div className="d-flex gap-1 flex-wrap">
+                        <div className={`d-flex gap-1 ${isMobile ? 'flex-wrap' : ''}`}>
                           <Button
-                            size="sm"
+                            size={isMobile ? "sm" : "sm"}
                             variant="success"
                             className="rounded-3"
                             title="Guardar cambios"
@@ -797,32 +913,32 @@ const ProspectosDashboard = () => {
                               (values.comentario === undefined || values.comentario === prospecto.comentario)
                             }
                           >
-                            <FaEdit />
+                            <FaEdit size={isMobile ? 12 : 14} />
                           </Button>
                           <Button
-                            size="sm"
+                            size={isMobile ? "sm" : "sm"}
                             variant="info"
                             className="rounded-3"
                             title="Ver historial"
                             onClick={() => handleOpenHistorial(prospecto)}
                           >
-                            <FaEye />
+                            <FaEye size={isMobile ? 12 : 14} />
                           </Button>
                           <Button
-                            size="sm"
+                            size={isMobile ? "sm" : "sm"}
                             variant="warning"
                             className="rounded-3"
                             title="Aplicar promoción"
                             onClick={() => handleOpenPromocionesModal(prospecto.id)}
                           >
-                            <FaMoneyBillWave />
+                            <FaMoneyBillWave size={isMobile ? 12 : 14} />
                           </Button>
                           <Link
                             to={`/prospectos/${prospecto.id}`}
                             className="btn btn-primary btn-sm rounded-3"
                             title="Ver detalles"
                           >
-                            <FaUserCheck />
+                            <FaUserCheck size={isMobile ? 12 : 14} />
                           </Link>
                         </div>
                       </Card.Footer>
@@ -840,17 +956,29 @@ const ProspectosDashboard = () => {
         </Container>
       </div>
 
-      {/* Modal para crear prospectos */}
-      <Modal show={showFormModal} onHide={() => setShowFormModal(false)} size="lg" centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Crear Nuevo Prospecto</Modal.Title>
+      {/* Modal para crear prospectos optimizado para móviles */}
+      <Modal 
+        show={showFormModal} 
+        onHide={() => setShowFormModal(false)} 
+        size="lg" 
+        centered
+        fullscreen={isMobile ? "sm-down" : false}
+        className="vendor-modal"
+      >
+        <Modal.Header closeButton className={`${isMobile ? 'py-2' : ''}`}>
+          <Modal.Title className={`fw-bold ${isMobile ? 'fs-6' : ''}`}>Crear Nuevo Prospecto</Modal.Title>
+          {!isMobile && (
+            <div className="ms-auto me-2">
+              <ThemeToggle />
+            </div>
+          )}
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body className={`${isMobile ? 'p-2' : ''}`}>
           <Form onSubmit={handleSubmit}>
-            <Row>
+            <Row className={`${isMobile ? 'g-2' : ''}`}>
               <Col md={6}>
                 <Form.Group className="mb-3">
-                  <Form.Label>Nombre</Form.Label>
+                  <Form.Label className={`${isMobile ? 'fw-medium' : ''}`}>Nombre</Form.Label>
                   <Form.Control
                     type="text"
                     name="nombre"
@@ -858,12 +986,13 @@ const ProspectosDashboard = () => {
                     onChange={handleChange}
                     required
                     maxLength={100}
+                    size={isMobile ? "sm" : "md"}
                   />
                 </Form.Group>
               </Col>
               <Col md={6}>
                 <Form.Group className="mb-3">
-                  <Form.Label>Apellido</Form.Label>
+                  <Form.Label className={`${isMobile ? 'fw-medium' : ''}`}>Apellido</Form.Label>
                   <Form.Control
                     type="text"
                     name="apellido"
@@ -871,14 +1000,15 @@ const ProspectosDashboard = () => {
                     onChange={handleChange}
                     required
                     maxLength={100}
+                    size={isMobile ? "sm" : "md"}
                   />
                 </Form.Group>
               </Col>
             </Row>
-            <Row>
+            <Row className={`${isMobile ? 'g-2' : ''}`}>
               <Col md={4}>
                 <Form.Group className="mb-3">
-                  <Form.Label>Edad</Form.Label>
+                  <Form.Label className={`${isMobile ? 'fw-medium' : ''}`}>Edad</Form.Label>
                   <Form.Control
                     type="number"
                     name="edad"
@@ -887,17 +1017,19 @@ const ProspectosDashboard = () => {
                     min={0}
                     max={120}
                     required
+                    size={isMobile ? "sm" : "md"}
                   />
                 </Form.Group>
               </Col>
               <Col md={8}>
                 <Form.Group className="mb-3">
-                  <Form.Label>Tipo de Afiliación</Form.Label>
+                  <Form.Label className={`${isMobile ? 'fw-medium' : ''}`}>Tipo de Afiliación</Form.Label>
                   <Form.Select
                     name="tipo_afiliacion_id"
                     value={formData.tipo_afiliacion_id}
                     onChange={handleChange}
                     required
+                    size={isMobile ? "sm" : "md"}
                   >
                     <option value="">Selecciona...</option>
                     {tiposAfiliacion.map(opt => (
@@ -911,7 +1043,7 @@ const ProspectosDashboard = () => {
             {/* Campo SUELDO BRUTO solo si requiere_sueldo */}
             {tiposAfiliacion.find(t => t.id === Number(formData.tipo_afiliacion_id))?.requiere_sueldo === 1 && (
               <Form.Group className="mb-3">
-                <Form.Label>Sueldo Bruto</Form.Label>
+                <Form.Label className={`${isMobile ? 'fw-medium' : ''}`}>Sueldo Bruto</Form.Label>
                 <Form.Control
                   type="number"
                   step="0.01"
@@ -921,6 +1053,7 @@ const ProspectosDashboard = () => {
                   min={0}
                   max={99999999.99}
                   required
+                  size={isMobile ? "sm" : "md"}
                 />
               </Form.Group>
             )}
@@ -928,21 +1061,22 @@ const ProspectosDashboard = () => {
             {/* Campo CATEGORÍA solo si requiere_categoria */}
             {tiposAfiliacion.find(t => t.id === Number(formData.tipo_afiliacion_id))?.requiere_categoria === 1 && (
               <Form.Group className="mb-3">
-                <Form.Label>Categoría Monotributo</Form.Label>
+                <Form.Label className={`${isMobile ? 'fw-medium' : ''}`}>Categoría Monotributo</Form.Label>
                 <Form.Select
                   name="categoria_monotributo"
                   value={formData.categoria_monotributo || ""}
                   onChange={handleChange}
                   required
+                  size={isMobile ? "sm" : "md"}
                 >
                   <option value="">Selecciona...</option>
-                  {Array.isArray(tiposAfiliacion.find(t => t.id === Number(formData.tipo_afiliacion_id)).categorias)
+                  {Array.isArray(tiposAfiliacion.find(t => t.id === Number(formData.tipo_afiliacion_id))?.categorias)
                     ? tiposAfiliacion.find(t => t.id === Number(formData.tipo_afiliacion_id)).categorias.map(cat => (
                         <option key={cat} value={cat}>{cat}</option>
                       ))
                     // Si categorias viene como string JSON:
-                    : Array.isArray(JSON.parse(tiposAfiliacion.find(t => t.id === Number(formData.tipo_afiliacion_id)).categorias || "[]")) &&
-                      JSON.parse(tiposAfiliacion.find(t => t.id === Number(formData.tipo_afiliacion_id)).categorias || "[]").map(cat => (
+                    : Array.isArray(JSON.parse(tiposAfiliacion.find(t => t.id === Number(formData.tipo_afiliacion_id))?.categorias || "[]")) &&
+                      JSON.parse(tiposAfiliacion.find(t => t.id === Number(formData.tipo_afiliacion_id))?.categorias || "[]").map(cat => (
                         <option key={cat} value={cat}>{cat}</option>
                       ))
                   }
@@ -950,10 +1084,10 @@ const ProspectosDashboard = () => {
               </Form.Group>
             )}
 
-            <Row>
+            <Row className={`${isMobile ? 'g-2' : ''}`}>
               <Col md={6}>
                 <Form.Group className="mb-3">
-                  <Form.Label>Número de contacto</Form.Label>
+                  <Form.Label className={`${isMobile ? 'fw-medium' : ''}`}>Número de contacto</Form.Label>
                   <Form.Control
                     type="text"
                     name="numero_contacto"
@@ -961,12 +1095,13 @@ const ProspectosDashboard = () => {
                     onChange={handleChange}
                     required
                     maxLength={30}
+                    size={isMobile ? "sm" : "md"}
                   />
                 </Form.Group>
               </Col>
               <Col md={6}>
                 <Form.Group className="mb-3">
-                  <Form.Label>Correo</Form.Label>
+                  <Form.Label className={`${isMobile ? 'fw-medium' : ''}`}>Correo</Form.Label>
                   <Form.Control
                     type="email"
                     name="correo"
@@ -974,13 +1109,14 @@ const ProspectosDashboard = () => {
                     onChange={handleChange}
                     required
                     maxLength={100}
+                    size={isMobile ? "sm" : "md"}
                   />
                 </Form.Group>
               </Col>
             </Row>
 
             <Form.Group className="mb-3">
-              <Form.Label>Localidad</Form.Label>
+              <Form.Label className={`${isMobile ? 'fw-medium' : ''}`}>Localidad</Form.Label>
               <Form.Control
                 type="text"
                 name="localidad"
@@ -988,11 +1124,12 @@ const ProspectosDashboard = () => {
                 onChange={handleChange}
                 required
                 maxLength={100}
+                size={isMobile ? "sm" : "md"}
               />
             </Form.Group>
 
             <Form.Group className="mb-3">
-              <Form.Label>Comentario</Form.Label>
+              <Form.Label className={`${isMobile ? 'fw-medium' : ''}`}>Comentario</Form.Label>
               <Form.Control
                 as="textarea"
                 name="comentario"
@@ -1000,138 +1137,152 @@ const ProspectosDashboard = () => {
                 onChange={handleChange}
                 maxLength={500}
                 placeholder="Agrega un comentario sobre el prospecto"
-                rows={3}
+                rows={isMobile ? 2 : 3}
+                size={isMobile ? "sm" : "md"}
               />
             </Form.Group>
 
             {/* Bloque para agregar familiares */}
-            <Card className="mb-3 mt-4">
-              <Card.Header className="bg-light">
-                <h5 className="mb-0">Familiares</h5>
-              </Card.Header>
-              <Card.Body>
-                <Row>
-                  <Col md={4}>
-                    <Form.Group className="mb-3">
-                      <Form.Label>Vínculo</Form.Label>
-                      <Form.Select
-                        name="vinculo"
-                        value={nuevoFamiliar.vinculo}
-                        onChange={handleFamiliarChange}
-                      >
-                        <option value="">Selecciona...</option>
-                        {vinculos.map(v => (
-                          <option key={v.value} value={v.value}>{v.label}</option>
-                        ))}
-                      </Form.Select>
-                    </Form.Group>
-                  </Col>
-                  <Col md={4}>
-                    <Form.Group className="mb-3">
-                      <Form.Label>Nombre</Form.Label>
-                      <Form.Control
-                        type="text"
-                        name="nombre"
-                        value={nuevoFamiliar.nombre}
-                        onChange={handleFamiliarChange}
-                        maxLength={100}
-                      />
-                    </Form.Group>
-                  </Col>
-                  <Col md={4}>
-                    <Form.Group className="mb-3">
-                      <Form.Label>Edad</Form.Label>
-                      <Form.Control
-                        type="number"
-                        name="edad"
-                        value={nuevoFamiliar.edad}
-                        onChange={handleFamiliarChange}
-                        min={0}
-                        max={120}
-                      />
-                    </Form.Group>
-                  </Col>
-                </Row>
-                
-                {/* Si vínculo es pareja/conyuge, mostrar tipo de afiliación y campos adicionales */}
-                {nuevoFamiliar.vinculo === "pareja/conyuge" && (
-                  <>
-                    <Form.Group className="mb-3">
-                      <Form.Label>Tipo de Afiliación</Form.Label>
-                      <Form.Select
-                        name="tipo_afiliacion_id"
-                        value={nuevoFamiliar.tipo_afiliacion_id}
-                        onChange={handleFamiliarChange}
-                        required
-                      >
-                        <option value="">Selecciona...</option>
-                        {tiposAfiliacion.map(opt => (
-                          <option key={opt.id} value={opt.id}>{opt.etiqueta}</option>
-                        ))}
-                      </Form.Select>
-                    </Form.Group>
-                    
-                    {/* Sueldo bruto si corresponde */}
-                    {tiposAfiliacion.find(t => t.id === Number(nuevoFamiliar.tipo_afiliacion_id))?.requiere_sueldo === 1 && (
+            {!isMobile && (
+              <Card className="mb-3 mt-4">
+                <Card.Header className="bg-light">
+                  <h5 className="mb-0">Familiares</h5>
+                </Card.Header>
+                <Card.Body>
+                  <Row>
+                    <Col md={4}>
                       <Form.Group className="mb-3">
-                        <Form.Label>Sueldo Bruto</Form.Label>
-                        <Form.Control
-                          type="number"
-                          name="sueldo_bruto"
-                          value={nuevoFamiliar.sueldo_bruto}
-                          onChange={handleFamiliarChange}
-                          min={0}
-                        />
-                      </Form.Group>
-                    )}
-                    
-                    {/* Categoría monotributo si corresponde */}
-                    {tiposAfiliacion.find(t => t.id === Number(nuevoFamiliar.tipo_afiliacion_id))?.requiere_categoria === 1 && (
-                      <Form.Group className="mb-3">
-                        <Form.Label>Categoría Monotributo</Form.Label>
+                        <Form.Label>Vínculo</Form.Label>
                         <Form.Select
-                          name="categoria_monotributo"
-                          value={nuevoFamiliar.categoria_monotributo}
+                          name="vinculo"
+                          value={nuevoFamiliar.vinculo}
                           onChange={handleFamiliarChange}
                         >
                           <option value="">Selecciona...</option>
-                          {categoriasMonotributo.map(cat => (
-                            <option key={cat} value={cat}>{cat}</option>
+                          {vinculos.map(v => (
+                            <option key={v.value} value={v.value}>{v.label}</option>
                           ))}
                         </Form.Select>
                       </Form.Group>
-                    )}
-                  </>
-                )}
-                
-                <Button
-                  variant="primary"
-                  onClick={agregarFamiliar}
-                  className="mt-2"
-                >
-                  Agregar Familiar
-                </Button>
-                
-                {familiares.length > 0 && (
-                  <div className="mt-3">
-                    <h6>Familiares agregados:</h6>
-                    <ListGroup>
-                      {familiares.map((fam, idx) => (
-                        <ListGroup.Item key={idx}>
-                          <strong>{fam.vinculo}:</strong> {fam.nombre} ({fam.edad} años)
-                        </ListGroup.Item>
-                      ))}
-                    </ListGroup>
-                  </div>
-                )}
-              </Card.Body>
-            </Card>
+                    </Col>
+                    <Col md={4}>
+                      <Form.Group className="mb-3">
+                        <Form.Label>Nombre</Form.Label>
+                        <Form.Control
+                          type="text"
+                          name="nombre"
+                          value={nuevoFamiliar.nombre}
+                          onChange={handleFamiliarChange}
+                          maxLength={100}
+                        />
+                      </Form.Group>
+                    </Col>
+                    <Col md={4}>
+                      <Form.Group className="mb-3">
+                        <Form.Label>Edad</Form.Label>
+                        <Form.Control
+                          type="number"
+                          name="edad"
+                          value={nuevoFamiliar.edad}
+                          onChange={handleFamiliarChange}
+                          min={0}
+                          max={120}
+                        />
+                      </Form.Group>
+                    </Col>
+                  </Row>
+                  
+                  {/* Si vínculo es pareja/conyuge, mostrar tipo de afiliación y campos adicionales */}
+                  {nuevoFamiliar.vinculo === "pareja/conyuge" && (
+                    <>
+                      <Form.Group className="mb-3">
+                        <Form.Label>Tipo de Afiliación</Form.Label>
+                        <Form.Select
+                          name="tipo_afiliacion_id"
+                          value={nuevoFamiliar.tipo_afiliacion_id}
+                          onChange={handleFamiliarChange}
+                          required
+                        >
+                          <option value="">Selecciona...</option>
+                          {tiposAfiliacion.map(opt => (
+                            <option key={opt.id} value={opt.id}>{opt.etiqueta}</option>
+                          ))}
+                        </Form.Select>
+                      </Form.Group>
+                      
+                      {/* Sueldo bruto si corresponde */}
+                      {tiposAfiliacion.find(t => t.id === Number(nuevoFamiliar.tipo_afiliacion_id))?.requiere_sueldo === 1 && (
+                        <Form.Group className="mb-3">
+                          <Form.Label>Sueldo Bruto</Form.Label>
+                          <Form.Control
+                            type="number"
+                            name="sueldo_bruto"
+                            value={nuevoFamiliar.sueldo_bruto}
+                            onChange={handleFamiliarChange}
+                            min={0}
+                          />
+                        </Form.Group>
+                      )}
+                      
+                      {/* Categoría monotributo si corresponde */}
+                      {tiposAfiliacion.find(t => t.id === Number(nuevoFamiliar.tipo_afiliacion_id))?.requiere_categoria === 1 && (
+                        <Form.Group className="mb-3">
+                          <Form.Label>Categoría Monotributo</Form.Label>
+                          <Form.Select
+                            name="categoria_monotributo"
+                            value={nuevoFamiliar.categoria_monotributo}
+                            onChange={handleFamiliarChange}
+                          >
+                            <option value="">Selecciona...</option>
+                            {categoriasMonotributo.map(cat => (
+                              <option key={cat} value={cat}>{cat}</option>
+                            ))}
+                          </Form.Select>
+                        </Form.Group>
+                      )}
+                    </>
+                  )}
+                  
+                  <Button
+                    variant="primary"
+                    onClick={agregarFamiliar}
+                    className="mt-2"
+                  >
+                    Agregar Familiar
+                  </Button>
+                  
+                  {familiares.length > 0 && (
+                    <div className="mt-3">
+                      <h6>Familiares agregados:</h6>
+                      <ListGroup>
+                        {familiares.map((fam, idx) => (
+                          <ListGroup.Item key={idx}>
+                            <strong>{fam.vinculo}:</strong> {fam.nombre} ({fam.edad} años)
+                          </ListGroup.Item>
+                        ))}
+                      </ListGroup>
+                    </div>
+                  )}
+                </Card.Body>
+              </Card>
+            )}
 
-            <div className="d-flex justify-content-end mt-3">
-              <Button variant="secondary" onClick={() => setShowFormModal(false)} className="me-2">
+            <div className={`d-flex ${isMobile ? 'flex-column gap-2' : 'justify-content-end'} mt-3`}>
+              <Button 
+                variant="secondary" 
+                onClick={() => setShowFormModal(false)} 
+                className={`${isMobile ? 'w-100 order-2' : 'me-2'}`}
+                size={isMobile ? "sm" : "md"}
+              >
                 Cancelar
               </Button>
-              <Button variant="primary" type="submit">
+              <Button 
+                variant="primary" 
+                type="submit"
+                className={`${isMobile ? 'w-100 order-1' : ''}`}
+                size={isMobile ? "sm" : "md"}
+              >
+                <FaPlus className={`${isMobile ? 'me-1' : 'me-2'}`} />
                 Crear Prospecto
               </Button>
             </div>
@@ -1139,28 +1290,34 @@ const ProspectosDashboard = () => {
         </Modal.Body>
       </Modal>
 
-      {/* Modal de historial */}
-      <Modal show={modalHistorial} onHide={() => setModalHistorial(false)} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Historial de acciones</Modal.Title>
+      {/* Modal de historial optimizado para móviles */}
+      <Modal 
+        show={modalHistorial} 
+        onHide={() => setModalHistorial(false)} 
+        centered
+        fullscreen={isMobile ? "sm-down" : false}
+        className="vendor-modal"
+      >
+        <Modal.Header closeButton className={`${isMobile ? 'py-2' : ''}`}>
+          <Modal.Title className={`fw-bold ${isMobile ? 'fs-6' : ''}`}>Historial de acciones</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
-          <div style={{ maxHeight: 400, overflowY: "auto" }}>
+        <Modal.Body className={`${isMobile ? 'p-2' : ''}`}>
+          <div style={{ maxHeight: isMobile ? "60vh" : 400, overflowY: "auto" }}>
             {historial.length === 0 ? (
               <div className="text-center text-muted py-4">
-                No hay registros de historial para este prospecto
+                <p>No hay registros de historial para este prospecto</p>
               </div>
             ) : (
               historial.map((accion, index) => (
-                <Card key={index} className="mb-2 border-left-info">
-                  <Card.Body className="py-2">
-                    <div className="d-flex justify-content-between align-items-center mb-1">
-                      <Badge bg={accion.accion === 'APLICAR_PROMOCION' ? 'success' : 'info'}>
+                <Card key={index} className={`${isMobile ? 'mb-2 border-0 shadow-sm' : 'mb-2 border-left-info'}`}>
+                  <Card.Body className={`${isMobile ? 'py-2 px-2' : 'py-2'}`}>
+                    <div className={`d-flex ${isMobile ? 'flex-column' : 'justify-content-between align-items-center'} mb-1`}>
+                      <Badge bg={accion.accion === 'APLICAR_PROMOCION' ? 'success' : 'info'} className={`${isMobile ? 'align-self-start mb-1' : ''}`}>
                         {accion.accion}
                       </Badge>
                       <small className="text-muted">{new Date(accion.fecha).toLocaleString()}</small>
                     </div>
-                    <div>{accion.descripcion}</div>
+                    <div className={`${isMobile ? 'small' : ''}`}>{accion.descripcion}</div>
                     <div className="mt-1">
                       <small>Por: {accion.first_name} {accion.last_name}</small>
                     </div>

@@ -1,0 +1,701 @@
+/* Estilos específicos para móviles - Admin Dashboard */
+/* Respeta completamente el sistema de temas claro/oscuro */
+
+/* ==============================
+   VARIABLES CSS PARA TEMAS
+   ============================== */
+
+:root {
+  /* Variables tema claro */
+  --admin-bg-primary: var(--card-bg-light, #ffffff);
+  --admin-bg-secondary: var(--bg-light, #f8f9fa);
+  --admin-text-primary: var(--text-light, #212529);
+  --admin-text-secondary: #6c757d;
+  --admin-border-color: var(--border-light, #dee2e6);
+  --admin-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  --admin-shadow-hover: 0 4px 16px rgba(0,0,0,0.15);
+}
+
+[data-bs-theme="dark"] {
+  /* Variables tema oscuro */
+  --admin-bg-primary: var(--card-bg-light, #1a1a1a);
+  --admin-bg-secondary: var(--bg-light, #0a0a0a);
+  --admin-text-primary: var(--text-light, #e0e0e0);
+  --admin-text-secondary: #b0b0b0;
+  --admin-border-color: var(--border-light, #333333);
+  --admin-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  --admin-shadow-hover: 0 4px 16px rgba(0,0,0,0.4);
+}
+
+/* ==============================
+   ESTILOS GENERALES PARA ADMIN
+   ============================== */
+
+@media (max-width: 767.98px) {
+  /* Container principal */
+  .admin-main-container.mobile-admin-container {
+    overflow-x: hidden;
+    position: relative;
+    background-color: var(--admin-bg-secondary);
+    color: var(--admin-text-primary);
+  }
+
+  /* Topbar móvil */
+  .admin-topbar.mobile-admin-topbar {
+    position: sticky;
+    top: 0;
+    z-index: 1020;
+    background: var(--admin-bg-primary) !important;
+    border-bottom: 1px solid var(--admin-border-color);
+    box-shadow: var(--admin-shadow);
+    min-height: 48px !important;
+    padding: 8px 12px !important;
+    color: var(--admin-text-primary);
+  }
+
+  .mobile-admin-topbar .btn.mobile-btn {
+    padding: 6px 10px;
+    border-radius: 6px;
+    color: var(--admin-text-primary);
+    border-color: var(--admin-border-color);
+  }
+
+  /* Contenido principal móvil */
+  .admin-content.mobile-admin-content {
+    padding: 12px !important;
+    background-color: var(--admin-bg-secondary);
+    color: var(--admin-text-primary);
+  }
+
+  /* Sidebar móvil */
+  .mobile-sidebar {
+    background: var(--admin-bg-primary);
+    border-right: 1px solid var(--admin-border-color);
+    color: var(--admin-text-primary);
+  }
+
+  .mobile-sidebar-header {
+    background: var(--admin-bg-secondary);
+    border-bottom: 2px solid var(--admin-border-color) !important;
+    color: var(--admin-text-primary);
+  }
+
+  .mobile-nav-list .mobile-nav-item {
+    padding: 12px 16px !important;
+    border-radius: 0;
+    border-bottom: 1px solid var(--admin-border-color);
+    color: var(--admin-text-primary);
+    transition: all 0.2s ease;
+  }
+
+  .mobile-nav-list .mobile-nav-item:hover {
+    background-color: var(--admin-bg-secondary);
+    border-left: 4px solid var(--bs-primary);
+    color: var(--admin-text-primary);
+  }
+
+  .mobile-nav-list .mobile-nav-item.active {
+    background-color: var(--bs-primary-bg-subtle);
+    border-left: 4px solid var(--bs-primary);
+    font-weight: 600;
+    color: var(--bs-primary-text-emphasis);
+  }
+
+  /* Offcanvas móvil */
+  .mobile-offcanvas {
+    box-shadow: var(--admin-shadow-hover);
+    background-color: var(--admin-bg-primary);
+    color: var(--admin-text-primary);
+  }
+}
+
+/* ==============================
+   ESTILOS PARA USUARIOS ADMIN
+   ============================== */
+
+@media (max-width: 767.98px) {
+  /* Header de usuarios */
+  .usuarios-header-mobile {
+    padding: 12px 0;
+    margin-bottom: 16px;
+    color: var(--admin-text-primary);
+  }
+
+  /* Controles de vista */
+  .vista-controls-mobile {
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .vista-controls-mobile .btn-group {
+    width: 100%;
+  }
+
+  /* Barra de búsqueda móvil */
+  .search-bar-mobile {
+    margin-bottom: 12px;
+  }
+
+  .search-bar-mobile .input-group {
+    box-shadow: var(--admin-shadow);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .search-bar-mobile .form-control {
+    background-color: var(--admin-bg-primary);
+    border-color: var(--admin-border-color);
+    color: var(--admin-text-primary);
+  }
+
+  .search-bar-mobile .input-group-text {
+    background-color: var(--admin-bg-primary);
+    border-color: var(--admin-border-color);
+    color: var(--admin-text-secondary);
+  }
+
+  /* Filtros móviles */
+  .filtros-mobile {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .filtros-mobile .form-select {
+    flex: 1;
+    background-color: var(--admin-bg-primary);
+    border-color: var(--admin-border-color);
+    color: var(--admin-text-primary);
+    min-width: 120px;
+    font-size: 14px;
+    padding: 8px 12px;
+    border-radius: 6px;
+  }
+
+  /* Tarjetas de usuario móvil */
+  .user-card-mobile {
+    border-radius: 12px;
+    margin-bottom: 16px;
+    border: 1px solid var(--admin-border-color);
+    transition: all 0.3s ease;
+    box-shadow: var(--admin-shadow);
+    background-color: var(--admin-bg-primary);
+    color: var(--admin-text-primary);
+  }
+
+  .user-card-mobile:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--admin-shadow-hover);
+  }
+
+  .user-card-mobile .card-header {
+    background: var(--admin-bg-secondary);
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--admin-border-color);
+    color: var(--admin-text-primary);
+  }
+
+  .user-card-mobile .card-body {
+    padding: 16px;
+    background-color: var(--admin-bg-primary);
+  }
+
+  .user-card-mobile .user-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--admin-text-primary);
+    margin-bottom: 4px;
+  }
+
+  .user-card-mobile .user-email {
+    font-size: 14px;
+    color: var(--admin-text-secondary);
+    margin-bottom: 8px;
+  }
+
+  .user-card-mobile .user-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .user-card-mobile .info-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 13px;
+    color: var(--admin-text-secondary);
+  }
+
+  .user-card-mobile .actions-mobile {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .user-card-mobile .btn-mobile {
+    flex: 1;
+    min-width: 80px;
+    padding: 6px 12px;
+    font-size: 13px;
+    border-radius: 6px;
+  }
+
+  /* Tabla responsiva para usuarios */
+  .users-table-mobile {
+    font-size: 14px;
+    background-color: var(--admin-bg-primary);
+    color: var(--admin-text-primary);
+  }
+
+  .users-table-mobile th {
+    padding: 8px 4px;
+    font-size: 12px;
+    background-color: var(--admin-bg-secondary);
+    color: var(--admin-text-primary);
+    border-color: var(--admin-border-color);
+    white-space: nowrap;
+  }
+
+  .users-table-mobile td {
+    padding: 8px 4px;
+    font-size: 13px;
+  }
+
+  .users-table-mobile .btn {
+    padding: 4px 8px;
+    font-size: 12px;
+  }
+}
+
+/* ==============================
+   ESTILOS PARA PRECIOS ADMIN
+   ============================== */
+
+@media (max-width: 767.98px) {
+  /* Tabs móviles */
+  .tabs-mobile {
+    margin-bottom: 16px;
+  }
+
+  .tabs-mobile .nav-link {
+    padding: 8px 12px;
+    font-size: 14px;
+    border-radius: 6px;
+    margin-right: 4px;
+  }
+
+  /* Controles de año */
+  .year-controls-mobile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    padding: 12px;
+    background: var(--admin-bg-primary);
+    border: 1px solid var(--admin-border-color);
+    border-radius: 8px;
+    color: var(--admin-text-primary);
+  }
+
+  .year-controls-mobile .form-select {
+    width: auto;
+    min-width: 100px;
+    background-color: var(--admin-bg-primary);
+    border-color: var(--admin-border-color);
+    color: var(--admin-text-primary);
+  }
+
+  /* Barra de herramientas móvil */
+  .toolbar-mobile {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 16px;
+    padding: 12px;
+    background: var(--admin-bg-primary);
+    border: 1px solid var(--admin-border-color);
+    border-radius: 8px;
+  }
+
+  .toolbar-mobile .btn-group {
+    width: 100%;
+  }
+
+  .toolbar-mobile .btn {
+    flex: 1;
+    font-size: 13px;
+    padding: 8px 12px;
+  }
+
+  /* Filtros de precios móvil */
+  .price-filters-mobile {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .price-filters-mobile .form-select {
+    font-size: 14px;
+    padding: 8px 12px;
+  }
+
+  /* Tarjetas de precio móvil */
+  .price-card-mobile {
+    border-radius: 12px;
+    margin-bottom: 16px;
+    border: 1px solid #e9ecef;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+
+  .price-card-mobile:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+  }
+
+  .price-card-mobile .card-header {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 12px 16px;
+    border-bottom: 1px solid #dee2e6;
+  }
+
+  .price-card-mobile .plan-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 4px;
+  }
+
+  .price-card-mobile .price-value {
+    font-size: 20px;
+    font-weight: 700;
+    color: #28a745;
+  }
+
+  .price-card-mobile .card-body {
+    padding: 16px;
+  }
+
+  .price-card-mobile .price-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .price-card-mobile .detail-item {
+    font-size: 13px;
+    color: #6c757d;
+  }
+
+  .price-card-mobile .detail-label {
+    font-weight: 600;
+    color: #495057;
+  }
+
+  .price-card-mobile .actions-mobile {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .price-card-mobile .btn-mobile {
+    flex: 1;
+    min-width: 70px;
+    padding: 6px 10px;
+    font-size: 12px;
+    border-radius: 6px;
+  }
+
+  /* Tabla de precios móvil */
+  .prices-table-mobile {
+    font-size: 12px;
+  }
+
+  .prices-table-mobile th {
+    padding: 6px 4px;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+
+  .prices-table-mobile td {
+    padding: 6px 4px;
+    font-size: 12px;
+  }
+
+  .prices-table-mobile .btn {
+    padding: 3px 6px;
+    font-size: 11px;
+  }
+
+  /* Estadísticas móviles */
+  .stats-mobile {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .stat-card-mobile {
+    padding: 12px;
+    background: var(--admin-bg-primary);
+    border-radius: 8px;
+    text-align: center;
+    border: 1px solid var(--admin-border-color);
+    box-shadow: var(--admin-shadow);
+    color: var(--admin-text-primary);
+  }
+
+  .stat-card-mobile .stat-number {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--bs-primary);
+  }
+
+  .stat-card-mobile .stat-label {
+    font-size: 12px;
+    color: var(--admin-text-secondary);
+    margin-top: 4px;
+  }
+}
+
+/* ==============================
+   MODALES MÓVILES
+   ============================== */
+
+@media (max-width: 767.98px) {
+  .modal-dialog {
+    margin: 8px;
+    max-width: calc(100% - 16px);
+  }
+
+  .modal-content {
+    border-radius: 12px;
+    background-color: var(--admin-bg-primary);
+    border-color: var(--admin-border-color);
+    color: var(--admin-text-primary);
+  }
+
+  .modal-header {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--admin-border-color);
+    background-color: var(--admin-bg-secondary);
+    color: var(--admin-text-primary);
+  }
+
+  .modal-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--admin-text-primary);
+  }
+
+  .modal-body {
+    padding: 16px;
+    background-color: var(--admin-bg-primary);
+    color: var(--admin-text-primary);
+  }
+
+  .modal-footer {
+    padding: 12px 16px;
+    border-top: 1px solid var(--admin-border-color);
+    background-color: var(--admin-bg-primary);
+  }
+
+  .modal-footer .btn {
+    flex: 1;
+    margin: 0 4px;
+  }
+
+  /* Formularios en modales */
+  .modal-body .form-label {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .modal-body .form-control,
+  .modal-body .form-select {
+    font-size: 14px;
+    padding: 10px 12px;
+    border-radius: 6px;
+    margin-bottom: 12px;
+  }
+}
+
+/* ==============================
+   UTILIDADES MÓVILES
+   ============================== */
+
+@media (max-width: 767.98px) {
+  .text-truncate-mobile {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 150px;
+  }
+
+  .btn-sm-mobile {
+    padding: 4px 8px;
+    font-size: 12px;
+  }
+
+  .font-small-mobile {
+    font-size: 13px !important;
+  }
+
+  .mt-mobile {
+    margin-top: 12px !important;
+  }
+
+  .mb-mobile {
+    margin-bottom: 12px !important;
+  }
+
+  .p-mobile {
+    padding: 12px !important;
+  }
+
+  .rounded-mobile {
+    border-radius: 8px !important;
+  }
+
+  .shadow-mobile {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+  }
+}
+
+/* ==============================
+   MEJORAS DE ACCESIBILIDAD
+   ============================== */
+
+@media (max-width: 767.98px) {
+  /* Botones más grandes para touch */
+  .btn-touch {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 10px 16px;
+    transition: all 0.2s ease;
+  }
+
+  /* Inputs más grandes para touch */
+  .form-control-touch {
+    min-height: 44px;
+    font-size: 16px; /* Evita zoom en iOS */
+    background-color: var(--admin-bg-primary);
+    border-color: var(--admin-border-color);
+    color: var(--admin-text-primary);
+  }
+
+  .form-control-touch:focus {
+    background-color: var(--admin-bg-primary);
+    border-color: var(--bs-primary);
+    color: var(--admin-text-primary);
+    box-shadow: 0 0 0 0.2rem rgba(117, 79, 254, 0.25);
+  }
+
+  /* Mejorar contraste en todos los temas */
+  .card-mobile,
+  .user-card-mobile,
+  .price-card-mobile {
+    border: 1px solid var(--admin-border-color);
+    background-color: var(--admin-bg-primary);
+    color: var(--admin-text-primary);
+  }
+
+  /* Animaciones suaves */
+  .fade-in-mobile {
+    animation: fadeInMobile 0.3s ease-in-out;
+  }
+
+  @keyframes fadeInMobile {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+/* ==============================
+   ESTILOS ESPECÍFICOS ADICIONALES
+   ============================== */
+
+@media (max-width: 767.98px) {
+  /* Tabs móviles mejoradas */
+  .tabs-mobile .nav-link {
+    padding: 8px 12px;
+    font-size: 14px;
+    border-radius: 6px;
+    margin-right: 4px;
+    color: var(--admin-text-secondary);
+    background-color: transparent;
+  }
+
+  .tabs-mobile .nav-link.active {
+    background-color: var(--bs-primary);
+    color: white;
+    border-color: var(--bs-primary);
+  }
+
+  .tabs-mobile .nav-link:hover:not(.active) {
+    background-color: var(--admin-bg-secondary);
+    color: var(--admin-text-primary);
+  }
+
+  /* Cards con mejor contraste */
+  .admin-content.mobile-view .card {
+    background-color: var(--admin-bg-primary);
+    border-color: var(--admin-border-color);
+    color: var(--admin-text-primary);
+    box-shadow: var(--admin-shadow);
+  }
+
+  .admin-content.mobile-view .card-header {
+    background-color: var(--admin-bg-secondary);
+    border-bottom-color: var(--admin-border-color);
+    color: var(--admin-text-primary);
+  }
+
+  .admin-content.mobile-view .card-body {
+    background-color: var(--admin-bg-primary);
+    color: var(--admin-text-primary);
+  }
+
+  /* Alerts móviles */
+  .mobile-view .alert {
+    border-radius: 8px;
+    margin-bottom: 12px;
+    font-size: 14px;
+  }
+
+  /* Paginación móvil */
+  .mobile-pagination {
+    font-size: 14px;
+    color: var(--admin-text-secondary);
+  }
+
+  /* Import/Export section */
+  .mobile-import-section .card {
+    background-color: var(--admin-bg-primary);
+    border-color: var(--admin-border-color);
+    color: var(--admin-text-primary);
+  }
+
+  .mobile-import-section .card-header {
+    background-color: var(--admin-bg-secondary);
+    color: var(--admin-text-primary);
+  }
+
+  .mobile-import-section .card-body {
+    background-color: var(--admin-bg-primary);
+  }
+}

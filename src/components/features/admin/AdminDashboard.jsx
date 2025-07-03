@@ -19,10 +19,14 @@ import ListaPreciosAdmin from "./ListaPreciosAdmin";
 import ThemeToggle from "../../common/ThemeToggle";
 import logoSrc from "../../../assets/logo-cober.webp";
 import { API_URL } from "../../config";
+import useScreenSize from "../../../hooks/useScreenSize";
+import '../vendedor/mobile-styles.css';
+import './admin-mobile-styles.css';
 
 const drawerWidth = 220;
 
 const AdminDashboard = () => {
+  const { isMobile } = useScreenSize();
   const [vista, setVista] = useState("usuarios");
   const [openDrawer, setOpenDrawer] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -41,6 +45,14 @@ const AdminDashboard = () => {
     
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  // En móvil, cerrar automáticamente el drawer cuando se selecciona una vista
+  const handleVistaChange = (nuevaVista) => {
+    setVista(nuevaVista);
+    if (isMobile) {
+      setOpenDrawer(false);
+    }
+  };
 
   const handleLogout = async () => {
     setLoading(true);
@@ -90,17 +102,17 @@ const AdminDashboard = () => {
 
   // Contenido del sidebar
   const drawerContent = (
-    <div style={{ width: drawerWidth }}>
-      <div className="d-flex flex-column align-items-center p-3 border-bottom">
-        <div className="mb-6" style={{ height: "40px", display: "flex", alignItems: "center", marginBottom: "60px" }}>
+    <div style={{ width: drawerWidth }} className={isMobile ? 'mobile-sidebar' : ''}>
+      <div className={`d-flex flex-column align-items-center p-3 border-bottom ${isMobile ? 'mobile-sidebar-header' : ''}`}>
+        <div className="mb-6" style={{ height: "40px", display: "flex", alignItems: "center", marginBottom: isMobile ? "30px" : "60px" }}>
           <img 
             src={logoSrc} 
             alt="Cober Logo" 
             className="auth-logo"
             style={{ 
-              height: "40px", 
+              height: isMobile ? "30px" : "40px", 
               width: "auto",
-              maxWidth: "120px",
+              maxWidth: isMobile ? "100px" : "120px",
               objectFit: "contain",
               display: "block",
               filter: "none",
@@ -118,18 +130,25 @@ const AdminDashboard = () => {
           />
         </div>
         <div className="d-flex align-items-center justify-content-between w-100">
-          <span className="fw-bold fs-5">Administración</span>
-          <Button variant="light" size="sm" onClick={() => setOpenDrawer(false)} className="d-lg-none">
+          <span className={`fw-bold ${isMobile ? 'fs-6' : 'fs-5'}`}>
+            {isMobile ? "Admin" : "Administración"}
+          </span>
+          <Button 
+            variant="light" 
+            size="sm" 
+            onClick={() => setOpenDrawer(false)} 
+            className={`d-lg-none ${isMobile ? 'mobile-btn' : ''}`}
+          >
             <FaChevronLeft />
           </Button>
         </div>
       </div>
-      <ListGroup variant="flush">
+      <ListGroup variant="flush" className={isMobile ? 'mobile-nav-list' : ''}>
         <ListGroup.Item 
           action 
           active={vista === "usuarios"} 
-          onClick={() => setVista("usuarios")}
-          className="border-0"
+          onClick={() => handleVistaChange("usuarios")}
+          className={`border-0 ${isMobile ? 'mobile-nav-item' : ''}`}
           style={{ transition: "all 0.2s ease" }}
         >
           <FaUsers className="me-2" /> Usuarios
@@ -137,17 +156,17 @@ const AdminDashboard = () => {
         <ListGroup.Item 
           action 
           active={vista === "precios"} 
-          onClick={() => setVista("precios")}
-          className="border-0"
+          onClick={() => handleVistaChange("precios")}
+          className={`border-0 ${isMobile ? 'mobile-nav-item' : ''}`}
           style={{ transition: "all 0.2s ease" }}
         >
-          <FaMoneyBillWave className="me-2" /> Lista de Precios
+          <FaMoneyBillWave className="me-2" /> {isMobile ? "Precios" : "Lista de Precios"}
         </ListGroup.Item>
         <ListGroup.Item 
           action 
           active={vista === "estadisticas"} 
-          onClick={() => setVista("estadisticas")}
-          className="border-0"
+          onClick={() => handleVistaChange("estadisticas")}
+          className={`border-0 ${isMobile ? 'mobile-nav-item' : ''}`}
           style={{ transition: "all 0.2s ease" }}
         >
           <FaChartLine className="me-2" /> Estadísticas
@@ -155,8 +174,8 @@ const AdminDashboard = () => {
         <ListGroup.Item 
           action 
           active={vista === "configuracion"} 
-          onClick={() => setVista("configuracion")}
-          className="border-0"
+          onClick={() => handleVistaChange("configuracion")}
+          className={`border-0 ${isMobile ? 'mobile-nav-item' : ''}`}
           style={{ transition: "all 0.2s ease" }}
         >
           <FaCog className="me-2" /> Configuración
@@ -164,7 +183,7 @@ const AdminDashboard = () => {
         <ListGroup.Item 
           action 
           onClick={handleLogout}
-          className="border-0"
+          className={`border-0 ${isMobile ? 'mobile-nav-item' : ''}`}
           style={{ transition: "all 0.2s ease" }}
         >
           <FaSignOutAlt className="me-2 text-danger" /> Cerrar sesión
@@ -184,7 +203,7 @@ const AdminDashboard = () => {
   }
 
   return (
-    <div className="d-flex admin-main-container" style={{ minHeight: "100vh" }}>
+    <div className={`d-flex admin-main-container ${isMobile ? 'mobile-admin-container' : ''}`} style={{ minHeight: "100vh" }}>
       {/* Sidebar fijo para escritorio */}
       <div
         className="d-none d-lg-block admin-sidebar border-end"
@@ -197,29 +216,32 @@ const AdminDashboard = () => {
       <Offcanvas
         show={openDrawer}
         onHide={() => setOpenDrawer(false)}
-        backdrop={false}
+        backdrop={isMobile ? true : false}
         scroll={true}
         style={{ width: drawerWidth }}
-        className="d-lg-none"
+        className={`d-lg-none ${isMobile ? 'mobile-offcanvas' : ''}`}
       >
         {drawerContent}
       </Offcanvas>
       
       {/* Contenido principal */}
-      <div style={{ flex: 1, marginLeft: window.innerWidth >= 992 ? drawerWidth : 0 }}>
+      <div style={{ flex: 1, marginLeft: window.innerWidth >= 992 ? drawerWidth : 0 }} className={isMobile ? 'mobile-main-content' : ''}>
         {/* Barra superior */}
-        <div className="d-flex align-items-center justify-content-between px-3 py-2 border-bottom admin-topbar" style={{ minHeight: 56 }}>
+        <div 
+          className={`d-flex align-items-center justify-content-between px-3 py-2 border-bottom admin-topbar ${isMobile ? 'mobile-admin-topbar' : ''}`} 
+          style={{ minHeight: isMobile ? 48 : 56 }}
+        >
           <div className="d-flex align-items-center">
             <Button 
               variant="light" 
-              className="d-lg-none me-2" 
+              className={`d-lg-none me-2 ${isMobile ? 'mobile-btn' : ''}`} 
               onClick={() => setOpenDrawer(true)}
             >
               <FaBars />
             </Button>
-            <span className="fw-bold fs-5">
-              {vista === "usuarios" && "Gestión de Usuarios"}
-              {vista === "precios" && "Lista de Precios"}
+            <span className={`fw-bold ${isMobile ? 'fs-6' : 'fs-5'}`}>
+              {vista === "usuarios" && (isMobile ? "Usuarios" : "Gestión de Usuarios")}
+              {vista === "precios" && (isMobile ? "Precios" : "Lista de Precios")}
               {vista === "estadisticas" && "Estadísticas"}
               {vista === "configuracion" && "Configuración"}
             </span>
@@ -228,24 +250,24 @@ const AdminDashboard = () => {
         </div>
         
         {/* Contenido dinámico */}
-        <Container fluid className="py-3 admin-content">
+        <Container fluid className={`py-3 admin-content ${isMobile ? 'mobile-admin-content' : ''}`}>
           {vista === "usuarios" && <UsuariosAdmin />}
           {vista === "precios" && <ListaPreciosAdmin />}
           {vista === "estadisticas" && (
             <div className="text-center py-5">
               <div className="text-muted">
-                <FaChartLine size={48} className="mb-3 opacity-50" />
-                <h4 className="mb-3">Módulo de Estadísticas</h4>
-                <p className="text-muted">Esta funcionalidad estará disponible próximamente.</p>
+                <FaChartLine size={isMobile ? 32 : 48} className="mb-3 opacity-50" />
+                <h4 className={`mb-3 ${isMobile ? 'fs-5' : ''}`}>Módulo de Estadísticas</h4>
+                <p className={`text-muted ${isMobile ? 'text-sm' : ''}`}>Esta funcionalidad estará disponible próximamente.</p>
               </div>
             </div>
           )}
           {vista === "configuracion" && (
             <div className="text-center py-5">
               <div className="text-muted">
-                <FaCog size={48} className="mb-3 opacity-50" />
-                <h4 className="mb-3">Módulo de Configuración</h4>
-                <p className="text-muted">Esta funcionalidad estará disponible próximamente.</p>
+                <FaCog size={isMobile ? 32 : 48} className="mb-3 opacity-50" />
+                <h4 className={`mb-3 ${isMobile ? 'fs-5' : ''}`}>Módulo de Configuración</h4>
+                <p className={`text-muted ${isMobile ? 'text-sm' : ''}`}>Esta funcionalidad estará disponible próximamente.</p>
               </div>
             </div>
           )}

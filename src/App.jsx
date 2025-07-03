@@ -19,6 +19,7 @@ import ProspectoDetalle from "./components/features/vendedor/ProspectoDetalle";
 
 function App() {
   useEffect(() => {
+    // Configurar interceptor de axios para manejo de errores y sesiones
     const interceptor = axios.interceptors.response.use(
       response => response,
       error => {
@@ -35,16 +36,67 @@ function App() {
             icon: "warning",
             title: "Sesión expirada",
             text: "Tu sesión ha finalizado. Por favor, inicia sesión nuevamente.",
-            confirmButtonText: "Ir al login"
+            confirmButtonText: "Ir al login",
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            customClass: {
+              container: 'mobile-friendly-swal'
+            }
           }).then(() => {
             localStorage.removeItem("token");
+            localStorage.removeItem("sessionId");
+            localStorage.removeItem("loginTime");
+            localStorage.removeItem("user_id");
+            localStorage.removeItem("user_name");
+            localStorage.removeItem("user_lastname");
+            localStorage.removeItem("user_role");
+            localStorage.removeItem("user_email");
             window.location.href = "/";
           });
         }
         return Promise.reject(error);
       }
     );
-    return () => axios.interceptors.response.eject(interceptor);
+
+    // Configurar headers por defecto para móviles
+    axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+    
+    // Manejo de orientación en dispositivos móviles
+    const handleOrientationChange = () => {
+      // Pequeño delay para asegurar que el layout se ajuste
+      setTimeout(() => {
+        window.dispatchEvent(new Event('resize'));
+      }, 100);
+    };
+
+    // Prevenir zoom en inputs en iOS
+    const preventZoom = (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA') {
+        e.target.addEventListener('focus', () => {
+          const viewport = document.querySelector('meta[name="viewport"]');
+          if (viewport) {
+            viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+          }
+        });
+        
+        e.target.addEventListener('blur', () => {
+          const viewport = document.querySelector('meta[name="viewport"]');
+          if (viewport) {
+            viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, user-scalable=no');
+          }
+        });
+      }
+    };
+
+    // Event listeners
+    window.addEventListener('orientationchange', handleOrientationChange);
+    document.addEventListener('focusin', preventZoom);
+
+    return () => {
+      axios.interceptors.response.eject(interceptor);
+      window.removeEventListener('orientationchange', handleOrientationChange);
+      document.removeEventListener('focusin', preventZoom);
+    };
   }, []);
 
   return (
